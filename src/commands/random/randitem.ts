@@ -34,5 +34,7 @@ export class RandItemCommand extends Command {
     for (const el of array) {
       el.trim()
     }
+
+    if (array.length < 2) return
   }
 }
