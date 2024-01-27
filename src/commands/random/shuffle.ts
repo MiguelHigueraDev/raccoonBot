@@ -1,16 +1,15 @@
 import { Command } from '@sapphire/framework'
-import type { ChatInputCommandInteraction, InteractionResponse } from 'discord.js'
-import Alerts from '../../lib/alerts/alerts'
+import { type ChatInputCommandInteraction, type InteractionResponse } from 'discord.js'
 import { shuffleArray } from '../../lib/random/shuffleUtils'
 import { splitString } from '../../lib/arrays/arrayUtils'
 
-export class RandItemCommand extends Command {
+export class ShuffleCommand extends Command {
   public constructor (context: Command.LoaderContext, options: Command.Options) {
     super(context, {
       ...options,
-      name: 'randitem',
-      aliases: ['ritem'],
-      description: 'Get a random item from a comma-separated list.',
+      name: 'shuffle',
+      aliases: ['shuf'],
+      description: 'Shuffle a comma-separated list of items.',
       cooldownDelay: 3000
     })
   }
@@ -25,19 +24,15 @@ export class RandItemCommand extends Command {
             .setName('list')
             .setDescription('Comma-separated list of items.')
             .setRequired(true)
-        )
-    , {
-      idHints: ['1200846684025016342']
+        ), {
+      idHints: ['1200846686176678059']
     })
   }
 
   public async chatInputRun (interaction: ChatInputCommandInteraction): Promise<InteractionResponse<boolean>> {
     const list = interaction.options.getString('list', true)
     const array = splitString(list)
-
-    if (array.length < 2) return await Alerts.WARN(interaction, 'Please provide at least two items separated by commas.', true)
-
-    const firstItem = shuffleArray(array)[0]
-    return await interaction.reply(firstItem)
+    const shuffledArray = shuffleArray(array).join(', ')
+    return await interaction.reply(shuffledArray)
   }
 }

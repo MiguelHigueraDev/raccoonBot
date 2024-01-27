@@ -15,7 +15,9 @@ export class PingCommand extends Command {
   public override registerApplicationCommands (registry: Command.Registry): void {
     registry.registerChatInputCommand((builder) =>
       builder.setName('ping').setDescription('Ping bot to see if it\'s alive')
-    )
+    , {
+      idHints: ['1200846682422776008']
+    })
   }
 
   public async messageRun (message: Message): Promise<Message> {
