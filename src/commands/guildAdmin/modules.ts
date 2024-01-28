@@ -93,8 +93,14 @@ export const getModuleEmbed = async (moduleIndex: number, guildId: string) => {
     }
 
     if (isModuleEnabled === 1) {
+      embed.addFields({
+        name: 'Current status: ', value: ':white_check_mark: **Enabled in this server**'
+      })
       return { embed, components: [disableRow] }
     } else {
+      embed.addFields({
+        name: 'Current status: ', value: ':no_entry_sign: **Disabled in this server**'
+      })
       return { embed, components: [enableRow] }
     }
   } catch (error) {
