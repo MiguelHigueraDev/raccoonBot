@@ -8,67 +8,81 @@ datasource db {
 }
 
 model Guild {
-  id             String @id
-  name           String? @db.VarChar(255)
-  primaryChannel String? @db.VarChar(255)
-  modules GuildModules[]
+  id              String            @id
+  name            String?           @db.VarChar(255)
+  primaryChannel  String?           @db.VarChar(255)
+  modules         GuildModules[]
   userPreferences UserPreferences[]
-  settings GuildSettings[]
+  settings        GuildSettings[]
 }
 
 model User {
-  id       String   @id
-  username String?   @db.VarChar(255)
-  birthday DateTime? @db.Date
-  tags     Tags[]
+  id          String            @id
+  username    String?           @db.VarChar(255)
+  birthday    DateTime?         @db.Date
+  tags        Tag[]
   preferences UserPreferences[]
+  modules     UserModules[]
 }
 
-model Tags {
+model Tag {
   id          Int    @id @default(autoincrement())
   name        String @db.VarChar(100)
   description String @db.Text
-  usageCount Int @default(0)
+  usageCount  Int    @default(0)
   userId      String
-  user        User?   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade, map: "User_fk_1")
+  user        User?  @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade, map: "User_fk_1")
 }
 
 model Module {
-  id Int @id @default(autoincrement())
-  name String @db.VarChar(100)
-  description String @db.VarChar(1000)
-  guilds GuildModules[]
+  id          Int            @id @default(autoincrement())
+  name        String         @db.VarChar(100)
+  description String         @db.VarChar(1000)
+  guilds      GuildModules[]
+  users       UserModules[]
 }
 
 model GuildModules {
-  guild Guild @relation(fields: [guildId], references: [id])
-  guildId String
-  module Module @relation(fields: [moduleId], references: [id])
+  guild    Guild  @relation(fields: [guildId], references: [id])
+  guildId  String
+  module   Module @relation(fields: [moduleId], references: [id])
   moduleId Int
-  name String @db.VarChar(100)
-  description String @db.VarChar(1000)
+  enabled  Int    @default(0) @db.TinyInt
+
   @@id([guildId, moduleId])
 }
 
-// Preferences are user settings
+model UserModules {
+  module   Module @relation(fields: [moduleId], references: [id])
+  moduleId Int
+  user     User   @relation(fields: [userId], references: [id])
+  userId   String
+  enabled  Int    @default(0) @db.TinyInt
+
+  @@id([moduleId, userId])
+}
+
+// Preferences are user settings (birthday, etc)
 model Preference {
-  id Int @id @default(autoincrement())
-  name String @db.VarChar(100)
-  description String @db.VarChar(1000)
-  users UserPreferences[]
+  id          Int               @id @default(autoincrement())
+  name        String            @db.VarChar(100)
+  description String            @db.VarChar(1000)
+  users       UserPreferences[]
 }
 
 model UserPreferences {
-  preference Preference @relation(fields: [preferenceId], references: [id])
+  preference   Preference @relation(fields: [preferenceId], references: [id])
   preferenceId Int
-  user User @relation(fields: [userId], references: [id])
-  userId String
-  guild Guild @relation(fields: [guildId], references: [id])
-  guildId String
-  enabled Int @db.TinyInt @default(0)
+  user         User       @relation(fields: [userId], references: [id])
+  userId       String
+  guild        Guild      @relation(fields: [guildId], references: [id])
+  guildId      String
+  enabled      Int        @default(0) @db.TinyInt
+
   @@id([guildId, preferenceId])
 }
-// Settings are guild (server) preferences
+
+// Settings are guild (server) preferences (main channel, etc)
 enum Settings {
   string
   choices
@@ -80,24 +94,25 @@ enum Settings {
 }
 
 model Setting {
-  id Int @id @default(autoincrement())
-  name String @db.VarChar(100)
-  description String @db.VarChar(1000)
-  type Settings
-  typeSettings String @db.VarChar(1000)
-  commandName String @db.VarChar(100)
-  commandDescription String @db.VarChar(100)
-  commandPlaceholder String @db.VarChar(100)
-  optionName String @db.VarChar(100)
-  optionDescription String @db.VarChar(100)
-  guilds GuildSettings[]
+  id                 Int             @id @default(autoincrement())
+  name               String          @db.VarChar(100)
+  description        String          @db.VarChar(1000)
+  type               Settings
+  typeSettings       String          @db.VarChar(1000)
+  commandName        String          @db.VarChar(100)
+  commandDescription String          @db.VarChar(100)
+  commandPlaceholder String          @db.VarChar(100)
+  optionName         String          @db.VarChar(100)
+  optionDescription  String          @db.VarChar(100)
+  guilds             GuildSettings[]
 }
 
 model GuildSettings {
-  guild Guild @relation(fields: [guildId], references: [id])
-  guildId String
-  setting Setting @relation(fields: [settingId], references: [id])
+  guild     Guild   @relation(fields: [guildId], references: [id])
+  guildId   String
+  setting   Setting @relation(fields: [settingId], references: [id])
   settingId Int
-  value String @db.VarChar(1000)
+  value     String  @db.VarChar(1000)
+
   @@id([guildId, settingId])
 }
