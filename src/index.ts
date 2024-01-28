@@ -2,6 +2,7 @@ import { PrismaClient } from '@prisma/client'
 import { SapphireClient, container } from '@sapphire/framework'
 import { GatewayIntentBits } from 'discord.js'
 import { config } from 'dotenv'
+import { registerSubcommands } from './registerSubcommands'
 config()
 
 const token = process.env.BOT_TOKEN
@@ -24,5 +25,10 @@ declare module '@sapphire/pieces' {
 
 container.trivias = []
 container.db = prisma
+
+// Register option subcommands
+/* registerSubcommands()
+  .then(() => { console.log('Subcommands updated.') })
+  .catch((error) => { console.log(error) }) */
 
 client.login(token).catch((error) => { console.log('The bot has crashed.\n' + error) })

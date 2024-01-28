@@ -102,7 +102,7 @@ const resetSetting = async (guildId: string, settingId: number): Promise<boolean
  */
 const fetchSettings = async (): Promise<any[] | boolean> => {
   try {
-    const settings = await container.db.guildSettings.findMany()
+    const settings = await container.db.setting.findMany()
     return settings
   } catch (error) {
     console.error(error)
