@@ -1,7 +1,7 @@
 import { type ChatInputCommandInteraction } from 'discord.js'
 import Alerts from '../../lib/alerts/alerts'
 import settingsHandler from '../../lib/database/settingsHandler'
-import { Settings } from '../../constants/settings/settings'
+import { Settings } from '../../constants/bot-config/settings'
 
 export const updateMainChannel = async (interaction: ChatInputCommandInteraction) => {
   if (interaction.guild === null) throw new Error('This command cannot be executed in a DM.')
