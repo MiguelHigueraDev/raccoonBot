@@ -1,0 +1,103 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Guild {
+  id             String @id
+  name           String? @db.VarChar(255)
+  primaryChannel String? @db.VarChar(255)
+  modules GuildModules[]
+  userPreferences UserPreferences[]
+  settings GuildSettings[]
+}
+
+model User {
+  id       String   @id
+  username String?   @db.VarChar(255)
+  birthday DateTime? @db.Date
+  tags     Tags[]
+  preferences UserPreferences[]
+}
+
+model Tags {
+  id          Int    @id @default(autoincrement())
+  name        String @db.VarChar(100)
+  description String @db.Text
+  usageCount Int @default(0)
+  userId      String
+  user        User?   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade, map: "User_fk_1")
+}
+
+model Module {
+  id Int @id @default(autoincrement())
+  name String @db.VarChar(100)
+  description String @db.VarChar(1000)
+  guilds GuildModules[]
+}
+
+model GuildModules {
+  guild Guild @relation(fields: [guildId], references: [id])
+  guildId String
+  module Module @relation(fields: [moduleId], references: [id])
+  moduleId Int
+  name String @db.VarChar(100)
+  description String @db.VarChar(1000)
+  @@id([guildId, moduleId])
+}
+
+// Preferences are user settings
+model Preference {
+  id Int @id @default(autoincrement())
+  name String @db.VarChar(100)
+  description String @db.VarChar(1000)
+  users UserPreferences[]
+}
+
+model UserPreferences {
+  preference Preference @relation(fields: [preferenceId], references: [id])
+  preferenceId Int
+  user User @relation(fields: [userId], references: [id])
+  userId String
+  guild Guild @relation(fields: [guildId], references: [id])
+  guildId String
+  enabled Int @db.TinyInt @default(0)
+  @@id([guildId, preferenceId])
+}
+// Settings are guild (server) preferences
+enum Settings {
+  string
+  choices
+  boolean
+  integer
+  number
+  channel
+  user
+}
+
+model Setting {
+  id Int @id @default(autoincrement())
+  name String @db.VarChar(100)
+  description String @db.VarChar(1000)
+  type Settings
+  typeSettings String @db.VarChar(1000)
+  commandName String @db.VarChar(100)
+  commandDescription String @db.VarChar(100)
+  commandPlaceholder String @db.VarChar(100)
+  optionName String @db.VarChar(100)
+  optionDescription String @db.VarChar(100)
+  guilds GuildSettings[]
+}
+
+model GuildSettings {
+  guild Guild @relation(fields: [guildId], references: [id])
+  guildId String
+  setting Setting @relation(fields: [settingId], references: [id])
+  settingId Int
+  value String @db.VarChar(1000)
+  @@id([guildId, settingId])
+}

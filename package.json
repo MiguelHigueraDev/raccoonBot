@@ -13,6 +13,7 @@
   "author": "MiguelHigueraDev",
   "license": "MIT",
   "dependencies": {
+    "@prisma/client": "^5.8.1",
     "@sapphire/framework": "^5.0.6",
     "@types/he": "^1.2.3",
     "discord.js": "^14.14.1",
@@ -26,6 +27,7 @@
     "eslint-plugin-import": "^2.29.1",
     "eslint-plugin-n": "^16.6.2",
     "eslint-plugin-promise": "^6.1.1",
+    "prisma": "^5.8.1",
     "typescript": "^5.3.3"
   }
 }
