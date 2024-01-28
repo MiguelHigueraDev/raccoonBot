@@ -35,6 +35,7 @@ export class GuildModulesButtonsHandler extends InteractionHandler {
       }
     }
 
+    // Toggling module
     if (interaction.customId === 'enableModule' || interaction.customId === 'disableModule') {
       try {
         const guildId = interaction.guild.id
@@ -67,7 +68,7 @@ const getCurrentIndex = (interaction: ButtonInteraction) => {
   if (interaction.message.embeds[0].footer === null) throw new Error('Invalid embed.')
   const pageText = interaction.message.embeds[0].footer.text
   const slashPos = pageText.indexOf('/')
-  // Module ends at index 7
+  // Calculate index starting position using Module + space
   const currentPage = +pageText.substring('Module'.length + 1, slashPos)
   return currentPage
 }

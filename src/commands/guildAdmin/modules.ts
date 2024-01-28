@@ -24,8 +24,8 @@ export class ModulesCommand extends Command {
   }
 
   public async chatInputRun (interaction: ChatInputCommandInteraction) {
-    // Fetch module from databases
-    if (interaction.guild === null) return await Alerts.ERROR(interaction, 'This command cannot be run in a DM.', true)
+    // Fetch module from database
+    if (interaction.guild === null) return await Alerts.ERROR(interaction, 'This command cannot be executed in a DM.', true)
     const module = await getModuleEmbed(1, interaction.guild.id)
     if (module instanceof Error) {
       return await Alerts.ERROR(interaction, 'Error creating embed.', true)
@@ -40,6 +40,17 @@ export interface EmbedObject {
   components: Array<ActionRowBuilder<any>>
 }
 
+/**
+ * Retrieves an embed and interactive components for a specific module.
+ *
+ * @async
+ * @function
+ * @param {number} moduleIndex - The index of the module to retrieve.
+ * @param {string} guildId - The ID of the guild for which the module is requested.
+ * @returns {Promise<{ embed: EmbedBuilder, components: ActionRowBuilder[] } | Error>} A promise that resolves to an object containing the embed and interactive components, or rejects with an error if the module is not found or an error occurs.
+ *
+ * @throws {Error} If the module is not found or an error occurs during the retrieval process.
+ */
 export const getModuleEmbed = async (moduleIndex: number, guildId: string) => {
   try {
     const module = await container.db.module.findUnique({
