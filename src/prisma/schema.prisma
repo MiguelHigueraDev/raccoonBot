@@ -17,12 +17,12 @@ model Guild {
 }
 
 model User {
-  id          String            @id
-  username    String?           @db.VarChar(255)
-  birthday    DateTime?         @db.Date
-  tags        Tag[]
-  preferences UserPreferences[]
-  modules     UserModules[]
+  id                 String            @id
+  username           String?           @db.VarChar(255)
+  birthday           DateTime?         @db.Date
+  lastBirthdayChange DateTime?
+  tags               Tag[]
+  preferences        UserPreferences[]
 }
 
 model Tag {
@@ -39,7 +39,6 @@ model Module {
   name        String         @db.VarChar(100)
   description String         @db.VarChar(1000)
   guilds      GuildModules[]
-  users       UserModules[]
 }
 
 model GuildModules {
@@ -50,16 +49,6 @@ model GuildModules {
   enabled  Int    @default(0) @db.TinyInt
 
   @@id([guildId, moduleId])
-}
-
-model UserModules {
-  module   Module @relation(fields: [moduleId], references: [id])
-  moduleId Int
-  user     User   @relation(fields: [userId], references: [id])
-  userId   String
-  enabled  Int    @default(0) @db.TinyInt
-
-  @@id([moduleId, userId])
 }
 
 // Preferences are user settings (birthday, etc)
