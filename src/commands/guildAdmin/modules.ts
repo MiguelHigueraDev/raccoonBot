@@ -2,6 +2,7 @@ import { Command, container } from '@sapphire/framework'
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, PermissionFlagsBits, type ChatInputCommandInteraction } from 'discord.js'
 import Alerts from '../../lib/alerts/alerts'
 import moduleHandler from '../../lib/database/moduleHandler'
+import { type EmbedObject } from '../../lib/interface/embedObject'
 
 export class ModulesCommand extends Command {
   public constructor (context: Command.LoaderContext, options: Command.Options) {
@@ -33,11 +34,6 @@ export class ModulesCommand extends Command {
     const { embed, components } = module as EmbedObject
     return await interaction.reply({ embeds: [embed], components, ephemeral: true })
   }
-}
-
-export interface EmbedObject {
-  embed: EmbedBuilder
-  components: Array<ActionRowBuilder<any>>
 }
 
 /**

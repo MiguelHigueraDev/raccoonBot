@@ -68,7 +68,7 @@ model UserPreferences {
   guildId      String
   enabled      Int        @default(0) @db.TinyInt
 
-  @@id([guildId, preferenceId])
+  @@id([guildId, preferenceId, userId])
 }
 
 // Settings are guild (server) preferences (main channel, etc)
