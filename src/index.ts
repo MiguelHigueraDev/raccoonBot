@@ -3,12 +3,14 @@ import { SapphireClient, container } from '@sapphire/framework'
 import { GatewayIntentBits } from 'discord.js'
 import { config } from 'dotenv'
 import { registerSubcommands } from './registerSubcommands'
+import birthdaySchedule from './schedules/birthday'
+import updateGuildUsers from './schedules/updateGuildUsers'
 config()
 
 const token = process.env.BOT_TOKEN
 
 const client = new SapphireClient({
-  intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent, GatewayIntentBits.GuildPresences],
+  intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent, GatewayIntentBits.GuildPresences, GatewayIntentBits.GuildMembers],
   loadMessageCommandListeners: true
 })
 
@@ -23,6 +25,12 @@ declare module '@sapphire/pieces' {
   }
 }
 
+// Schedules
+function loadSchedules (): void {
+  birthdaySchedule()
+  updateGuildUsers()
+}
+
 container.trivias = []
 container.db = prisma
 
@@ -31,4 +39,6 @@ container.db = prisma
   .then(() => { console.log('Subcommands updated.') })
   .catch((error) => { console.log(error) }) */
 
-client.login(token).catch((error) => { console.log('The bot has crashed.\n' + error) })
+client.login(token)
+  .then(() => { loadSchedules() })
+  .catch((error) => { console.log('The bot has crashed.\n' + error) })

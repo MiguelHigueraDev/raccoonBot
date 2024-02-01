@@ -16,10 +16,13 @@
     "@prisma/client": "^5.8.1",
     "@sapphire/framework": "^5.0.6",
     "@types/he": "^1.2.3",
+    "@types/node-cron": "^3.0.11",
+    "@types/node-schedule": "^2.1.5",
     "date-fns": "^3.3.1",
     "discord.js": "^14.14.1",
     "dotenv": "^16.3.1",
-    "he": "^1.2.0"
+    "he": "^1.2.0",
+    "node-schedule": "^2.1.1"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^6.19.0",

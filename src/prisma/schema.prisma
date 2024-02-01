@@ -14,6 +14,7 @@ model Guild {
   modules         GuildModules[]
   userPreferences UserPreferences[]
   settings        GuildSettings[]
+  users GuildUser[]
 }
 
 model User {
@@ -23,6 +24,7 @@ model User {
   lastBirthdayChange DateTime?
   tags               Tag[]
   preferences        UserPreferences[]
+  guilds GuildUser[]
 }
 
 model Tag {
@@ -104,4 +106,12 @@ model GuildSettings {
   value     String  @db.VarChar(1000)
 
   @@id([guildId, settingId])
+}
+
+model GuildUser {
+  guild Guild @relation(fields: [guildId], references: [id])
+  guildId String
+  user User @relation(fields: [userId], references: [id])
+  userId String
+  @@id([userId, guildId])
 }

@@ -110,8 +110,29 @@ const fetchSettings = async (): Promise<any[] | boolean> => {
   }
 }
 
+const fetchSetting = async (guildId: string, settingId: number): Promise<string | null> => {
+  try {
+    const checkSetting = await checkIfSettingExists(guildId, settingId)
+    if (!checkSetting) throw new Error(`Error creating setting ${settingId} for guild ${guildId}`)
+
+    const foundSetting = await container.db.guildSettings.findUnique({
+      where: {
+        guildId_settingId: {
+          guildId, settingId
+        }
+      }
+    })
+
+    if (foundSetting === null) throw new Error('Setting not found in database.')
+    return foundSetting.value
+  } catch (error) {
+    console.error(error)
+    return null
+  }
+}
+
 const settingsHandler = {
-  checkIfSettingExists, updateSetting, resetSetting, fetchSettings
+  checkIfSettingExists, updateSetting, resetSetting, fetchSettings, fetchSetting
 }
 
 export default settingsHandler
