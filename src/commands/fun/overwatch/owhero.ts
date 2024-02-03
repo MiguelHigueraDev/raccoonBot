@@ -44,7 +44,7 @@ export class OwHeroCommand extends Command {
 
     const [heroName, heroUrl] = chosenHero
 
-    const heroImage = new AttachmentBuilder('../src/assets/overwatchHeroes/' + heroUrl)
+    const heroImage = new AttachmentBuilder('../assets/overwatchHeroes/' + heroUrl)
 
     const heroEmbed = new EmbedBuilder()
       .setColor('Blurple')
