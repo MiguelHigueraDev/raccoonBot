@@ -121,12 +121,12 @@ model GuildUser {
 
 // Related to poll command
 model Poll {
-  id        Int          @id @default(autoincrement())
-  messageId String
-  options   PollOption[]
-  user      User         @relation(fields: [userId], references: [id])
-  userId    String
-  votes     PollVote[]
+  id             Int          @id @default(autoincrement())
+  options        PollOption[]
+  user           User         @relation(fields: [userId], references: [id])
+  userId         String
+  expirationDate DateTime
+  votes          PollVote[]
 }
 
 model PollOption {
