@@ -1,7 +1,7 @@
 import { Command } from '@sapphire/framework'
 import DateFormatter from '../../lib/formatting/dateFormatter'
 import Alerts from '../../lib/alerts/alerts'
-import { addYears, differenceInYears, getUnixTime } from 'date-fns'
+import { addHours, addYears, differenceInYears, getUnixTime } from 'date-fns'
 import { type ChatInputCommandInteraction, time, ButtonBuilder, ButtonStyle, ActionRowBuilder, type MessageActionRowComponentBuilder } from 'discord.js'
 
 export class BirthdayCommand extends Command {
@@ -61,6 +61,8 @@ export class BirthdayCommand extends Command {
       }
       const parsedDate = DateFormatter.parseDate(birthdate)
       if (parsedDate === false) return await Alerts.ERROR(interaction, 'Date has an invalid format or is invalid. It must be in yyyy/mm/dd, yyyy.mm.dd, or yyyy-mm-dd format.\nExample: March 20, 2020 would be 2020/03/20.', true)
+      // Add 8 hours to account for most timezones, so it shows the correct day.
+      const correctedDate = addHours(new Date(parsedDate), 8).toISOString()
 
       // Check if user is in cooldown
       if (user?.lastBirthdayChange != null) {
@@ -75,7 +77,7 @@ export class BirthdayCommand extends Command {
       // Show confirmation dialog
       const buttonRow = createButtons()
       const response = await interaction.reply({
-        content: `Are you sure you want to set your birthday to ${time(Math.floor(Date.parse(parsedDate) / 1000), 'D')}?\nYou won't be able to change it for a year.`,
+        content: `Are you sure you want to set your birthday to ${time(Math.floor(Date.parse(correctedDate) / 1000), 'D')}?\nYou won't be able to change it for a year.`,
         components: [buttonRow],
         ephemeral: true
       })
@@ -89,13 +91,13 @@ export class BirthdayCommand extends Command {
               id: userId
             },
             data: {
-              birthday: parsedDate,
+              birthday: correctedDate,
               lastBirthdayChange: new Date(),
               username
             }
           })
 
-          const nextBirthday = DateFormatter.getNextBirthday(parsedDate)
+          const nextBirthday = DateFormatter.getNextBirthday(correctedDate)
 
           return await interaction.editReply({
             content: `:tada: Your birthday has been successfully saved! Next birthday: ${time(Math.floor(Date.parse(nextBirthday) / 1000), 'D')} (${time(Math.floor(Date.parse(nextBirthday)) / 1000, 'R')})\nIf this server has the \`birthday\` module enabled and you also have enabled it in your personal preferences for this server (\`/preferences\`), server members will be notified of it!`,
