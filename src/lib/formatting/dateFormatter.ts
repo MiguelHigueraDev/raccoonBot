@@ -19,9 +19,8 @@ const checkDateFormat = (date: string): boolean => {
  * @returns {boolean} True if the date is valid, false otherwise.
  */
 const checkValidDate = (year: number, month: number, day: number): boolean => {
-  const currentYear = new Date().getFullYear()
   // There isn't anyone born outside of these lol
-  if (year < 1907 || year > (currentYear - 6)) return false
+  if (year < 1907) return false
   if (month < 1 || month > 12) return false
   if (day < 1 || day > 31) return false
 

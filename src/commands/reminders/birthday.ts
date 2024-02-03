@@ -60,7 +60,7 @@ export class BirthdayCommand extends Command {
         return await Alerts.ERROR(interaction, 'Date has an invalid format. It must be in yyyy/mm/dd, yyyy.mm.dd, or yyyy-mm-dd format.\nExample: March 20, 2020 would be 2020/03/20.', true)
       }
       const parsedDate = DateFormatter.parseDate(birthdate)
-      if (parsedDate === false) return await Alerts.ERROR(interaction, 'Date has an invalid format. It must be in yyyy/mm/dd, yyyy.mm.dd, or yyyy-mm-dd format.\nExample: March 20, 2020 would be 2020/03/20.', true)
+      if (parsedDate === false) return await Alerts.ERROR(interaction, 'Date has an invalid format or is invalid. It must be in yyyy/mm/dd, yyyy.mm.dd, or yyyy-mm-dd format.\nExample: March 20, 2020 would be 2020/03/20.', true)
 
       // Check if user is in cooldown
       if (user?.lastBirthdayChange != null) {
