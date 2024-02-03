@@ -25,7 +25,7 @@ export class BirthdayCommand extends Command {
             .setMaxLength(10)
             .setMinLength(3)
         ), {
-      idHints: ['1201314473579921577']
+      idHints: ['1201314473579921577', '1203384457843966002']
     }
     )
   }

@@ -20,7 +20,7 @@ export class ModulesCommand extends Command {
         .setName(this.name)
         .setDescription(this.description),
     {
-      idHints: ['1201207600155480246']
+      idHints: ['1201207600155480246', '1203384536520589382']
     })
   }
 

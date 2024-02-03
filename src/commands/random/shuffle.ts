@@ -25,7 +25,7 @@ export class ShuffleCommand extends Command {
             .setDescription('Comma-separated list of items.')
             .setRequired(true)
         ), {
-      idHints: ['1200846688248672357']
+      idHints: ['1200846688248672357', '1203384454345654382']
     })
   }
 

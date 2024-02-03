@@ -26,7 +26,7 @@ export class TriviaCommand extends Command {
             .addChoices(...TRIVIA_CATEGORIES)
         )
     , {
-      idHints: ['1200881899577561258']
+      idHints: ['1200881899577561258', '1203384541159493653']
     })
   }
 

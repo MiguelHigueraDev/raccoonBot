@@ -23,7 +23,7 @@ export class FahCommand extends Command {
             .setMaxValue(50000)
             .setMinValue(-50000)
         ), {
-      idHints: ['1200897090662977598']
+      idHints: ['1200897090662977598', '1203384621987922020']
     })
   }
 

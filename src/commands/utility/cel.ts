@@ -23,7 +23,7 @@ export class CelCommand extends Command {
             .setMaxValue(50000)
             .setMinValue(-50000)
         ), {
-      idHints: ['1200897088494501978']
+      idHints: ['1200897088494501978', '1203384623338623058']
     })
   }
 

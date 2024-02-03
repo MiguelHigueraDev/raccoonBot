@@ -16,7 +16,7 @@ export class PingCommand extends Command {
     registry.registerChatInputCommand((builder) =>
       builder.setName('ping').setDescription('Ping bot to see if it\'s alive')
     , {
-      idHints: ['1200846682422776008']
+      idHints: ['1200846682422776008', '1203384624718422037']
     })
   }
 

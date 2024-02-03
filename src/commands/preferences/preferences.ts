@@ -19,7 +19,7 @@ export class PreferencesCommand extends Command {
         .setName(this.name)
         .setDescription(this.description),
     {
-      idHints: ['1202036953139122287']
+      idHints: ['1202036953139122287', '1203384450898071583']
     })
   }
 

@@ -27,7 +27,7 @@ export class RandItemCommand extends Command {
             .setRequired(true)
         )
     , {
-      idHints: ['1200846684025016342']
+      idHints: ['1200846684025016342', '1203384456107261963']
     })
   }
 

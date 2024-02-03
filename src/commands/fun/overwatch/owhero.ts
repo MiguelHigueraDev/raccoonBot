@@ -23,7 +23,7 @@ export class OwHeroCommand extends Command {
             .setDescription('(OPTIONAL) Specify the role you want to get.')
             .setRequired(false)
             .addChoices({ name: 'DPS', value: 'dps' }, { name: 'Support', value: 'support' }, { name: 'Tank', value: 'tank' })), {
-      idHints: ['1203344077643317279']
+      idHints: ['1203344077643317279', '1203384544544297060']
     })
   }
 

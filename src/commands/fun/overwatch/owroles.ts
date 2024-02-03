@@ -47,7 +47,7 @@ export class OwRolesCommand extends Command {
             .setName('assignhero')
             .setDescription('(OPTIONAL) Assign a hero to each player')
             .setRequired(false)), {
-      idHints: ['1203377500546138142']
+      idHints: ['1203377500546138142', '1203384542820311081']
     })
   }
 

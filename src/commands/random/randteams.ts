@@ -26,7 +26,7 @@ export class RandTeamsCommand extends Command {
             .setDescription('Comma-separated list of people to shuffle.')
             .setRequired(true)
         ), {
-      idHints: ['1200846686176678059']
+      idHints: ['1200846686176678059', '1203384453108473896']
     })
   }
 
