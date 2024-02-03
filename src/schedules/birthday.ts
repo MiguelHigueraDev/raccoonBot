@@ -7,7 +7,7 @@ import { Settings } from '../constants/bot-config/settings'
 import { checkChannelPermissions } from '../lib/permissions/checkPermissions'
 
 const birthdaySchedule = () => {
-  scheduleJob('30 23 * * *', async () => {
+  scheduleJob('0 6 * * *', async () => {
     // Fetch all users with all their user preferences
     // If the user has their birthday set to current day, and preference is enabled, send birthday message to channels
     const elegibleUsers: ElegibleUsers[] = await container.db.$queryRaw`
@@ -33,7 +33,7 @@ const birthdaySchedule = () => {
 
       // Handle leap birthdays
       if (month === 1 && day === 29) {
-        birthday = addHours(birthday, 18)
+        birthday = addHours(birthday, 16)
         day = getDate(birthday)
         month = getMonth(birthday)
       }
