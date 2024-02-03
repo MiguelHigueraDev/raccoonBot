@@ -37,7 +37,7 @@ export class RandItemCommand extends Command {
 
     if (array.length < 2) return await Alerts.WARN(interaction, 'Please provide at least two items separated by commas.', true)
 
-    const firstItem = shuffleArray(array)[0]
+    const firstItem: string = shuffleArray(array)[0]
     return await interaction.reply(firstItem)
   }
 }

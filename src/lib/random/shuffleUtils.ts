@@ -1,7 +1,7 @@
 /**
  * Shuffles the elements of a given array in a random order using the Fisher-Yates (Knuth) shuffle algorithm.
  *
- * @param {string[]} [array=[]] - An array of strings that you want to shuffle. Default value is an empty array.
+ * @param {string[]} [array=[]] - An array that you want to shuffle. Default value is an empty array.
  * @returns {string[]} A new array containing the elements of the input array shuffled in a random order.
  *
  * @remarks
@@ -9,7 +9,7 @@
  * - The randomness is achieved through the use of the `Math.random()` function in the Fisher-Yates algorithm.
 */
 
-export const shuffleArray = (array: string[] = []): string[] => {
+export const shuffleArray = (array: any[] = []): any[] => {
   for (let i: number = array.length - 1; i > 0; i--) {
     const j: number = Math.floor(Math.random() * (i + 1))
     const temp: string = array[i]
