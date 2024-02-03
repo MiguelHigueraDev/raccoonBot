@@ -52,7 +52,7 @@ export class OwRolesCommand extends Command {
   }
 
   public async chatInputRun (interaction: ChatInputCommandInteraction) {
-    const players = interaction.options.getString('players')
+    const players = interaction.options.getString('players', true)
     const assignHero = interaction.options.getBoolean('assignhero') ?? false
     const dpsHeroes = shuffleArray(OverwatchHeroes.DPS_HEROES)
     const supportHeroes = shuffleArray(OverwatchHeroes.SUPPORT_HEROES)
