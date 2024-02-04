@@ -2,6 +2,7 @@ import { PrismaClient } from '@prisma/client'
 import { SapphireClient, container } from '@sapphire/framework'
 import { GatewayIntentBits } from 'discord.js'
 import { config } from 'dotenv'
+import { registerSubcommands } from './registerSubcommands'
 import birthdaySchedule from './schedules/birthday'
 import updateGuildUsers from './schedules/updateGuildUsers'
 config()
@@ -32,6 +33,11 @@ function loadSchedules (): void {
 
 container.trivias = []
 container.db = prisma
+
+// Register option subcommands
+/* registerSubcommands()
+  .then(() => { console.log('Subcommands updated.') })
+  .catch((error) => { console.log(error) }) */
 
 client.login(token)
   .then(() => { loadSchedules() })
