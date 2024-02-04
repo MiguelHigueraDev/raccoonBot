@@ -126,6 +126,7 @@ model Poll {
   user           User         @relation(fields: [userId], references: [id])
   userId         String
   expirationDate DateTime
+  question       String
   votes          PollVote[]
 }
 
