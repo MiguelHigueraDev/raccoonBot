@@ -26,10 +26,16 @@ export class PollButtonsHandler extends InteractionHandler {
     if (match === null) return
     const pollId = parseInt(match[0], 10)
 
-    // Get Option ID from custom ID
+    // Check if the poll has expired
+    if (await pollHandler.checkIfPollExpired(pollId) === true) {
+      return await interaction.user.send(StringAlerts.ERROR('You can\'t vote, this poll has expired.'))
+    }
+
+    // Get Option number from button custom ID
     const optionNumber = Number(interaction.customId.substring('pollOption'.length))
     // Replace the emojis at the start with an empty string
     const optionText = embed.fields[optionNumber - 1].name.replace(/:(one|two|three|four|five|six|seven|eight): /g, '')
+    // Finally get the optionId
     const optionId: number = await pollHandler.getOptionId(pollId, optionText)
 
     if (optionId == null) return await interaction.user.send(StringAlerts.ERROR('Error fetching poll data.'))
@@ -42,15 +48,16 @@ export class PollButtonsHandler extends InteractionHandler {
       await pollHandler.addVote(pollId, interaction.user.id, optionId)
     }
 
-    // Update vote count
+    // Get votes and extra info
     const votes: VoteObject[] = await pollHandler.getVotes(pollId)
     if (votes == null) return await interaction.user.send(StringAlerts.ERROR('Error fetching poll data.'))
     const totalVotes: number = votes.reduce((total, vote) => Number(total) + Number(vote.voteCount), 0)
     const creatorId: string = votes[0].userId
     const expirationDate: Date = votes[0].expirationDate
+
     // Get question from votes array
     const question = votes[0].question
-    // Update embed
+    // Update embed and vote count
     const pollEmbed = await getPollEmbed(pollId, question, totalVotes, votes, creatorId, expirationDate)
     await interaction.update({ embeds: [pollEmbed] })
   }

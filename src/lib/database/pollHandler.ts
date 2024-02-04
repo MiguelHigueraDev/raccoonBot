@@ -57,6 +57,20 @@ const checkIfUserVoted = async (pollId: number, userId: string) => {
   }
 }
 
+const checkIfPollExpired = async (pollId: number) => {
+  try {
+    const poll = await container.db.poll.findFirst({
+      where: {
+        id: pollId
+      }
+    })
+    return poll?.expirationDate < new Date()
+  } catch (error) {
+    console.error(error)
+    return true
+  }
+}
+
 const addVote = async (pollId: number, userId: string, optionId: number) => {
   try {
     await container.db.pollVote.create({
@@ -100,7 +114,7 @@ const getVotes = async (pollId: number) => {
 }
 
 const pollHandler = {
-  createPoll, getOptionId, checkIfUserVoted, addVote, getVotes
+  createPoll, getOptionId, checkIfUserVoted, checkIfPollExpired, addVote, getVotes
 }
 
 export default pollHandler
