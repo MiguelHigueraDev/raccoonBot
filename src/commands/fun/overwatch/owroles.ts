@@ -75,7 +75,7 @@ export class OwRolesCommand extends Command {
     // Get all role counts
     let dpsAmount: number = Number(interaction.options.getString?.('dps')) ?? 0
     let healerAmount: number = Number(interaction.options.getString?.('support')) ?? 0
-    let tankAmount: number = Number(interaction.options.getString?.('tanks')) ?? 0
+    let tankAmount: number = Number(interaction.options.getString?.('tank')) ?? 0
     const totalAmount = dpsAmount + healerAmount + tankAmount
 
     // If there are more players than available total roles, add slots to roles until they
