@@ -73,6 +73,8 @@ const checkIfPollExpired = async (pollId: number) => {
 
 const addVote = async (pollId: number, userId: string, optionId: number) => {
   try {
+    // Check if user exists, if not create it
+    await userHandler.updateUserStatus(userId)
     await container.db.pollVote.create({
       data: {
         pollId,
