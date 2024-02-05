@@ -27,7 +27,7 @@ export class PollButtonsHandler extends InteractionHandler {
     const pollId = parseInt(match[0], 10)
 
     // Check if the poll has expired
-    if (await pollHandler.checkIfPollExpired(pollId) === true) {
+    if (await pollHandler.checkIfPollExpired(pollId)) {
       return await interaction.user.send(StringAlerts.ERROR('You can\'t vote, this poll has expired.'))
     }
 
@@ -42,7 +42,7 @@ export class PollButtonsHandler extends InteractionHandler {
 
     const checkAlreadyVoted = await pollHandler.checkIfUserVoted(pollId, interaction.user.id)
     if (checkAlreadyVoted === true) {
-      await interaction.user.send(StringAlerts.WARN('You have already voted in this poll.'))
+      return await interaction.user.send(StringAlerts.WARN('You have already voted in this poll.'))
     } else {
       // Add vote
       await pollHandler.addVote(pollId, interaction.user.id, optionId)
@@ -75,7 +75,10 @@ const getPollEmbed = async (pollId: number, question: string, total: number, vot
   // Add options
   for (let i = 0; i < votes.length; i++) {
     const emoji = emojiMap[i + 1]
-    pollEmbed.addFields({ name: `${emoji} ${votes[i].optionText}`, value: `${Number(votes[i].voteCount)} votes (${Math.round((Number(votes[i].voteCount) / Number(total)) * 100)}%)` })
+    pollEmbed.addFields({
+      name: `${emoji} ${votes[i].optionText}`,
+      value: `${Number(votes[i].voteCount)} votes (${Math.round((Number(votes[i].voteCount) / Number(total)) * 100)}%)`
+    })
   }
   pollEmbed.addFields({ name: `Poll created by: ${creator.displayName}.`, value: `Expires <t:${expirationDateUnix}:R>` })
   return pollEmbed

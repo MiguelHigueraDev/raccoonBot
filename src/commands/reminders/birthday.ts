@@ -51,7 +51,7 @@ export class BirthdayCommand extends Command {
         if (birthday?.birthday == null) {
           return await Alerts.INFO(interaction, 'Your birthday isn\'t saved. Save it using this command and providing a date in yyyy-mm-dd format.', true)
         } else {
-          return await Alerts.INFO(interaction, `Your birthday is: ${time(Math.floor(birthday.birthday.getTime() / 1000), 'D')}`, true)
+          return await Alerts.INFO(interaction, `Your birthday is: ${time(Math.floor(addHours(birthday.birthday.getTime(), 8) / 1000), 'D')}`, true)
         }
       }
 
@@ -100,7 +100,7 @@ export class BirthdayCommand extends Command {
           const nextBirthday = DateFormatter.getNextBirthday(correctedDate)
 
           return await interaction.editReply({
-            content: `:tada: Your birthday has been successfully saved! Next birthday: ${time(Math.floor(Date.parse(nextBirthday) / 1000), 'D')} (${time(Math.floor(Date.parse(nextBirthday)) / 1000, 'R')})\nIf this server has the \`birthday\` module enabled and you also have enabled it in your personal preferences for this server (\`/preferences\`), server members will be notified of it!`,
+            content: `:tada: Your birthday has been successfully saved! Next birthday: ${time(Math.floor(Date.parse(nextBirthday) / 1000), 'D')} (${time(Math.floor(Date.parse(nextBirthday)) / 1000, 'R')})\n\nNow check your \`/preferences\` to make sure the notifications are enabled in all servers you want to notify people of it.\nServer admins have to enable the \`/modules\` as well for the notifications to work if it isn't enabled.`,
             components: []
           })
         } else {
