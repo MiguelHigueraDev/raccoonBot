@@ -45,7 +45,6 @@ export class PollCommand extends Command {
     const question = interaction.options.getString('question', true)
     const options = interaction.options.getString('options', true)
     const expiration = interaction.options.getString('expiration') ?? '1d'
-    const creator = interaction.user.displayName
 
     const optionsArray = options.split(',').map((q) => q.trim())
     if (optionsArray.length < 2 || optionsArray.length > 8) {
@@ -86,7 +85,7 @@ export class PollCommand extends Command {
       const emoji = emojiMap[i + 1]
       pollEmbed.addFields({ name: `${emoji} ${optionsArray[i]}`, value: '0 votes (0%)' })
     }
-    pollEmbed.addFields({ name: `Poll created by: ${creator}.`, value: `Expires <t:${expirationDateUnix}:R>` })
+    pollEmbed.addFields({ name: 'Total votes: 0', value: `Expires <t:${expirationDateUnix}:R>` })
     const pollButtons = this.createButtons(optionsArray.length)
 
     return await interaction.reply({ embeds: [pollEmbed], components: pollButtons })

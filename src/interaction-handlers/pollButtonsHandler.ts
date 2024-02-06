@@ -83,7 +83,7 @@ const getPollEmbed = async (pollId: number, question: string, total: number, vot
       value: `${percentageBar} ${percentage}% (${Number(votes[i].voteCount)} votes)`
     })
   }
-  pollEmbed.addFields({ name: `Poll created by: ${creator.displayName}.`, value: `Expires <t:${expirationDateUnix}:R>` })
+  pollEmbed.addFields({ name: `Total votes: ${Number(total)}`, value: `Expires <t:${expirationDateUnix}:R>` })
   return pollEmbed
 }
 
