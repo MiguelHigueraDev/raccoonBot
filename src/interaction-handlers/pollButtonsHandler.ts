@@ -3,6 +3,7 @@ import { EmbedBuilder, type ButtonInteraction } from 'discord.js'
 import pollHandler from '../lib/database/pollHandler'
 import StringAlerts from '../lib/alerts/stringAlerts'
 import { emojiMap } from '../commands/utility/poll'
+import { EMOJI_PERCENTAGES } from '../constants/emojis/emojis'
 
 export class PollButtonsHandler extends InteractionHandler {
   public constructor (context: InteractionHandler.LoaderContext, options: InteractionHandler.Options) {
@@ -75,13 +76,39 @@ const getPollEmbed = async (pollId: number, question: string, total: number, vot
   // Add options
   for (let i = 0; i < votes.length; i++) {
     const emoji = emojiMap[i + 1]
+    const percentage = Math.round((Number(votes[i].voteCount) / Number(total)) * 100)
+    const percentageBar = getPercentageBar(percentage)
     pollEmbed.addFields({
       name: `${emoji} ${votes[i].optionText}`,
-      value: `${Number(votes[i].voteCount)} votes (${Math.round((Number(votes[i].voteCount) / Number(total)) * 100)}%)`
+      value: `${percentageBar} ${percentage}% (${Number(votes[i].voteCount)} votes)`
     })
   }
   pollEmbed.addFields({ name: `Poll created by: ${creator.displayName}.`, value: `Expires <t:${expirationDateUnix}:R>` })
   return pollEmbed
+}
+
+const getPercentageBar = (percentage: number) => {
+  if (percentage === 0) return EMOJI_PERCENTAGES[0]
+  if (percentage < 6) return EMOJI_PERCENTAGES[5]
+  if (percentage < 11) return EMOJI_PERCENTAGES[10]
+  if (percentage < 16) return EMOJI_PERCENTAGES[15]
+  if (percentage < 21) return EMOJI_PERCENTAGES[20]
+  if (percentage < 26) return EMOJI_PERCENTAGES[25]
+  if (percentage < 31) return EMOJI_PERCENTAGES[30]
+  if (percentage < 36) return EMOJI_PERCENTAGES[35]
+  if (percentage < 41) return EMOJI_PERCENTAGES[40]
+  if (percentage < 46) return EMOJI_PERCENTAGES[45]
+  if (percentage < 51) return EMOJI_PERCENTAGES[50]
+  if (percentage < 56) return EMOJI_PERCENTAGES[55]
+  if (percentage < 61) return EMOJI_PERCENTAGES[60]
+  if (percentage < 66) return EMOJI_PERCENTAGES[65]
+  if (percentage < 71) return EMOJI_PERCENTAGES[70]
+  if (percentage < 76) return EMOJI_PERCENTAGES[75]
+  if (percentage < 81) return EMOJI_PERCENTAGES[80]
+  if (percentage < 86) return EMOJI_PERCENTAGES[85]
+  if (percentage < 91) return EMOJI_PERCENTAGES[90]
+  if (percentage < 96) return EMOJI_PERCENTAGES[95]
+  return EMOJI_PERCENTAGES[100]
 }
 
 export interface VoteObject {
