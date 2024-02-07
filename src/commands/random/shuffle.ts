@@ -1,5 +1,5 @@
 import { Command } from '@sapphire/framework'
-import { type ChatInputCommandInteraction, type InteractionResponse } from 'discord.js'
+import { type Message, type ChatInputCommandInteraction, type InteractionResponse } from 'discord.js'
 import { shuffleArray } from '../../lib/random/shuffleUtils'
 import { splitString } from '../../lib/arrays/arrayUtils'
 
@@ -29,10 +29,23 @@ export class ShuffleCommand extends Command {
     })
   }
 
-  public async chatInputRun (interaction: ChatInputCommandInteraction): Promise<InteractionResponse<boolean>> {
+  public async chatInputRun (interaction: ChatInputCommandInteraction): Promise<undefined | InteractionResponse<boolean> | Message<boolean>> {
     const list = interaction.options.getString('list', true)
     const array = splitString(list)
-    const shuffledArray = shuffleArray(array).join(', ')
-    return await interaction.reply(shuffledArray)
+    const reply = await interaction.reply({ content: '**Shuffling list...**', fetchReply: true })
+    // Add extra shuffles in case there are 3 items or less
+    const shuffles = (array.length <= 3) ? array.length * 2 : array.length
+    for (let i = 0; i < shuffles; i++) {
+      // Check if message was deleted to prevent crash
+      const msgStillExists = await interaction.channel?.messages.fetch(reply.id).catch(() => null)
+      if (msgStillExists == null) return
+
+      await reply.edit({ content: shuffleArray(array).join(', ') })
+      await new Promise(resolve => setTimeout(resolve, 700))
+    }
+    const finalRoll: string = shuffleArray(array).join(', ')
+    const msgStillExists = await interaction.channel?.messages.fetch(reply.id).catch(() => null)
+    if (msgStillExists == null) return
+    return await reply.edit({ content: `${finalRoll}` })
   }
 }
