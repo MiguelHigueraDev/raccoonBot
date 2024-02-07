@@ -9,7 +9,8 @@ export class OwRolesCommand extends Command {
     super(context, {
       ...options,
       name: 'owroles',
-      description: 'Give a random role to a list of Overwatch players.'
+      description: 'Give a random role to a list of Overwatch players.',
+      cooldownDelay: 3000
     })
   }
 

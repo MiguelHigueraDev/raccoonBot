@@ -9,7 +9,8 @@ export class PreferencesCommand extends Command {
     super(context, {
       ...options,
       name: 'preferences',
-      description: 'Toggle preferences for this server.'
+      description: 'Toggle preferences for this server.',
+      cooldownDelay: 15000
     })
   }
 

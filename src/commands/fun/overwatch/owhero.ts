@@ -8,7 +8,8 @@ export class OwHeroCommand extends Command {
     super(context, {
       ...options,
       name: 'owhero',
-      description: 'Get a random Overwatch hero. Can specify role.'
+      description: 'Get a random Overwatch hero. Can specify role.',
+      cooldownDelay: 7000
     })
   }
 

@@ -9,7 +9,8 @@ export class BirthdayCommand extends Command {
     super(context, {
       ...options,
       name: 'birthday',
-      description: 'Save your birthday so people get notified of it!'
+      description: 'Save your birthday so people get notified of it!',
+      cooldownDelay: 15000
     })
   }
 

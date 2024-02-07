@@ -8,7 +8,8 @@ export class PingCommand extends Command {
       ...options,
       name: 'ping',
       aliases: ['pong'],
-      description: 'ping pong'
+      description: 'ping pong',
+      cooldownDelay: 5000
     })
   }
 

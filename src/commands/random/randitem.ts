@@ -11,7 +11,7 @@ export class RandItemCommand extends Command {
       name: 'randitem',
       aliases: ['ritem'],
       description: 'Get a random item from a comma-separated list.',
-      cooldownDelay: 3000
+      cooldownDelay: 5000
     })
   }
 

@@ -11,7 +11,7 @@ export class RandTeamsCommand extends Command {
       name: 'randteams',
       aliases: ['rteams'],
       description: 'Shuffle a list of people into two teams, up to 20 people.',
-      cooldownDelay: 3000
+      cooldownDelay: 5000
     })
   }
 

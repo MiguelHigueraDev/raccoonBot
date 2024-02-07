@@ -10,7 +10,7 @@ export class ShuffleCommand extends Command {
       name: 'shuffle',
       aliases: ['shuf'],
       description: 'Shuffle a comma-separated list of items.',
-      cooldownDelay: 3000
+      cooldownDelay: 5000
     })
   }
 

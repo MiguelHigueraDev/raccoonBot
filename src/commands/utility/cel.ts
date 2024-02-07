@@ -6,7 +6,8 @@ export class CelCommand extends Command {
     super(context, {
       ...options,
       name: 'cel',
-      description: 'Convert temperature from degrees Celsius to degrees Fahrenheit'
+      description: 'Convert temperature from degrees Celsius to degrees Fahrenheit',
+      cooldownDelay: 3000
     })
   }
 

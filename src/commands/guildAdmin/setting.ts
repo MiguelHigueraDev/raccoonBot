@@ -9,7 +9,8 @@ export class SettingCommand extends Command {
     super(context, {
       ...options,
       name: 'setting',
-      description: '[SERVER ADMIN ONLY] Edit server settings'
+      description: '[SERVER ADMIN ONLY] Edit server settings',
+      cooldownDelay: 15000
     })
   }
 

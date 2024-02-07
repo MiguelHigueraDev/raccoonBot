@@ -6,7 +6,8 @@ export class FahCommand extends Command {
     super(context, {
       ...options,
       name: 'fah',
-      description: 'Convert temperature from degrees Fahrenheit to degrees Celsius'
+      description: 'Convert temperature from degrees Fahrenheit to degrees Celsius',
+      cooldownDelay: 3000
     })
   }
 

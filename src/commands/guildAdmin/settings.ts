@@ -10,7 +10,8 @@ export class SettingsCommand extends Command {
       name: 'settings',
       description: '[SERVER ADMIN ONLY] Show a list of server settings',
       requiredUserPermissions: [PermissionFlagsBits.Administrator],
-      runIn: ['GUILD_TEXT']
+      runIn: ['GUILD_TEXT'],
+      cooldownDelay: 15000
     })
   }
 

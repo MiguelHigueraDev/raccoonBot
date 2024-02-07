@@ -9,7 +9,8 @@ export class PollCommand extends Command {
     super(context, {
       ...options,
       name: 'poll',
-      description: 'Create a poll'
+      description: 'Create a poll',
+      cooldownDelay: 1_800_000 // 30 minutes
     })
   }
 

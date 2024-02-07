@@ -10,7 +10,8 @@ export class TriviaCommand extends Command {
     super(context, {
       ...options,
       name: 'trivia',
-      description: 'Play a game of trivia!'
+      description: 'Play a game of trivia!',
+      cooldownDelay: 5000
     })
   }
 

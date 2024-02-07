@@ -10,7 +10,8 @@ export class ModulesCommand extends Command {
       ...options,
       name: 'modules',
       description: '[SERVER ADMIN ONLY] Enable/disable server modules.',
-      requiredUserPermissions: [PermissionFlagsBits.Administrator]
+      requiredUserPermissions: [PermissionFlagsBits.Administrator],
+      cooldownDelay: 15000
     })
   }
 
