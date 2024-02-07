@@ -44,74 +44,79 @@ export class TriviaCommand extends Command {
       triviaUrl = `https://opentdb.com/api.php?amount=1&category=${chosenCategory}&type=multiple`
     }
 
-    // Fetch question from API
-    const response = await fetch(triviaUrl)
-    if (!response.ok) await Alerts.ERROR(interaction, 'There was an error while fetching data from the API.', true)
-    const json = await response.json()
-    const questionInfo: { question: string, category: string, correct_answer: string, incorrect_answers: string[] } = json.results[0]
+    try {
+      // Fetch question from API
+      const response = await fetch(triviaUrl)
+      if (!response.ok) await Alerts.ERROR(interaction, 'There was an error while fetching data from the API.', true)
+      const json = await response.json()
+      const questionInfo: { question: string, category: string, correct_answer: string, incorrect_answers: string[] } = json.results[0]
 
-    // Replace all HTML character entities with valid text
-    const question: string = he.decode(questionInfo.question)
-    const category: string = he.decode(questionInfo.category)
-    const correctAnswer: string = he.decode(questionInfo.correct_answer)
-    const incorrectAnswers: string[] = questionInfo.incorrect_answers.map((answer: string) => he.decode(answer))
+      // Replace all HTML character entities with valid text
+      const question: string = he.decode(questionInfo.question)
+      const category: string = he.decode(questionInfo.category)
+      const correctAnswer: string = he.decode(questionInfo.correct_answer)
+      const incorrectAnswers: string[] = questionInfo.incorrect_answers.map((answer: string) => he.decode(answer))
 
-    // Put the answers in a formatted string in a random order
-    const answers = shuffleArray([...incorrectAnswers, correctAnswer])
-    const correctAnswerIndex = answers.indexOf(correctAnswer)
-    let formattedAnswers = ''
-    for (let i = 1; i < 5; i++) {
-      formattedAnswers += i + '. ' + answers.shift() + '\n'
+      // Put the answers in a formatted string in a random order
+      const answers = shuffleArray([...incorrectAnswers, correctAnswer])
+      const correctAnswerIndex = answers.indexOf(correctAnswer)
+      let formattedAnswers = ''
+      for (let i = 1; i < 5; i++) {
+        formattedAnswers += i + '. ' + answers.shift() + '\n'
+      }
+      formattedAnswers += '**Answer in the chat with the answer number!**'
+
+      // Display embed
+      const questionEmbed = new EmbedBuilder()
+        .setColor('Blurple')
+        .setTitle(question)
+        .setAuthor({ name: `Category: ${category}` })
+        .setDescription(formattedAnswers)
+        .setFooter({ text: 'Questions obtained from https://opentdb.com/' }
+        )
+
+      // Save current guild and channel to prevent multiple trivias in the same channel
+      this.container.trivias.push(`${interaction.guild.id}:${interaction.channel.id}`)
+      let answered = false
+      const participants: string[] = []
+      const collector = interaction.channel.createMessageCollector({ time: 15_000 })
+
+      collector.on('collect', async (message): Promise<any> => {
+        if (message.author.bot) return
+        // Check that the message still exists to avoid editing a non existing message
+        const msgCheck = await interaction.channel?.messages.fetch(trivia.id).catch(() => null)
+        if (msgCheck == null) return
+        if (parseInt(message.content) !== 1 && parseInt(message.content) !== 2 && parseInt(message.content) !== 3 && parseInt(message.content) !== 4) return
+
+        if (participants.includes(message.author.id)) {
+          return await interaction.followUp(`<@${message.author.id}>, you can't answer again!`)
+        }
+
+        if (parseInt(message.content) === correctAnswerIndex + 1) {
+          answered = true
+          collector.stop()
+          await interaction.followUp(`<@${message.author.id}> got the correct answer (**${correctAnswer}**)!`)
+          return await interaction.editReply({ content: `**Trivia ended!** Winner: <@${message.author.id}>`, embeds: [] })
+        } else {
+          participants.push(message.author.id)
+          return await interaction.followUp(`<@${message.author.id}>, sadly, that is incorrect!`)
+        }
+      })
+
+      collector.on('end', async (): Promise<any> => {
+        this.container.trivias = this.container.trivias.filter(trivia => trivia !== `${interaction.guild?.id}:${interaction.channel?.id}`)
+        // Check that the message still exists to avoid editing a non existing message
+        const msgCheck = await interaction.channel?.messages.fetch(trivia.id).catch(() => null)
+        if (msgCheck == null) return
+        if (!answered) {
+          return await interaction.editReply({ content: `It seems like no one got the correct answer :( It was **${correctAnswer}**`, embeds: [] })
+        }
+      })
+
+      const trivia = await interaction.reply({ embeds: [questionEmbed], fetchReply: true })
+    } catch (error) {
+      console.error(error)
+      return await Alerts.ERROR(interaction, 'There was an error while fetching data from the API.', true)
     }
-    formattedAnswers += '**Answer in the chat with the answer number!**'
-
-    // Display embed
-    const questionEmbed = new EmbedBuilder()
-      .setColor('Blurple')
-      .setTitle(question)
-      .setAuthor({ name: `Category: ${category}` })
-      .setDescription(formattedAnswers)
-      .setFooter({ text: 'Questions obtained from https://opentdb.com/' }
-      )
-
-    // Save current guild and channel to prevent multiple trivias in the same channel
-    this.container.trivias.push(`${interaction.guild.id}:${interaction.channel.id}`)
-    let answered = false
-    const participants: string[] = []
-    const collector = interaction.channel.createMessageCollector({ time: 15_000 })
-
-    collector.on('collect', async (message): Promise<any> => {
-      if (message.author.bot) return
-      // Check that the message still exists to avoid editing a non existing message
-      const msgCheck = await interaction.channel?.messages.fetch(trivia.id).catch(() => null)
-      if (msgCheck == null) return
-      if (parseInt(message.content) !== 1 && parseInt(message.content) !== 2 && parseInt(message.content) !== 3 && parseInt(message.content) !== 4) return
-
-      if (participants.includes(message.author.id)) {
-        return await interaction.followUp(`<@${message.author.id}>, you can't answer again!`)
-      }
-
-      if (parseInt(message.content) === correctAnswerIndex + 1) {
-        answered = true
-        collector.stop()
-        await interaction.followUp(`<@${message.author.id}> got the correct answer (**${correctAnswer}**)!`)
-        return await interaction.editReply({ content: `**Trivia ended!** Winner: <@${message.author.id}>`, embeds: [] })
-      } else {
-        participants.push(message.author.id)
-        return await interaction.followUp(`<@${message.author.id}>, sadly, that is incorrect!`)
-      }
-    })
-
-    collector.on('end', async (): Promise<any> => {
-      this.container.trivias = this.container.trivias.filter(trivia => trivia !== `${interaction.guild?.id}:${interaction.channel?.id}`)
-      // Check that the message still exists to avoid editing a non existing message
-      const msgCheck = await interaction.channel?.messages.fetch(trivia.id).catch(() => null)
-      if (msgCheck == null) return
-      if (!answered) {
-        return await interaction.editReply({ content: `It seems like no one got the correct answer :( It was **${correctAnswer}**`, embeds: [] })
-      }
-    })
-
-    const trivia = await interaction.reply({ embeds: [questionEmbed], fetchReply: true })
   }
 }
