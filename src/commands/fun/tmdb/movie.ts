@@ -13,7 +13,7 @@ export class MovieCommand extends Command {
       ...options,
       name: 'movie',
       description: 'Get information about a movie from The Movie Database.',
-      cooldownDelay: 3000
+      cooldownDelay: 10000
     })
   }
 
