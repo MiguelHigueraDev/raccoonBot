@@ -7,7 +7,7 @@ import { Settings } from '../constants/bot-config/settings'
 import { checkChannelPermissions } from '../lib/permissions/checkPermissions'
 
 const birthdaySchedule = () => {
-  scheduleJob('0 6 * * *', async () => {
+  scheduleJob('0 3 * * *', async () => {
     // Fetch all users with all their user preferences
     // If the user has their birthday set to current day, and preference is enabled, send birthday message to channels
     const elegibleUsers: ElegibleUsers[] = await container.db.$queryRaw`
