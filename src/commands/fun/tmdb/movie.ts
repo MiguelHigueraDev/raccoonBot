@@ -2,7 +2,7 @@ import { Command } from '@sapphire/framework'
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, type ChatInputCommandInteraction } from 'discord.js'
 import { config } from 'dotenv'
 import { type CastResult, type Cast, type Movie, type MovieResult, type MovieResults, type KeywordsResult, type Keyword } from '../../../lib/interface/tmdb'
-import { ShowLoadingScreen } from '../../../lib/api/loadingMessage'
+import { ShowLoadingMessage } from '../../../lib/api/loadingMessage'
 import StringAlerts from '../../../lib/alerts/stringAlerts'
 config()
 const TMDB_KEY = process.env.TMDB_KEY
@@ -34,7 +34,7 @@ export class MovieCommand extends Command {
 
   public async chatInputRun (interaction: ChatInputCommandInteraction) {
     const movie = interaction.options.getString('movie', true)
-    const loadingMessage = await ShowLoadingScreen(interaction)
+    const loadingMessage = await ShowLoadingMessage(interaction)
     try {
       const partialMovieQuery = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=${TMDB_KEY}&query=${movie}&include_adult=false`)
       const partialMovieQueryData: MovieResults = await partialMovieQuery.json()

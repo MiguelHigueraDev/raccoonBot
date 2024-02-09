@@ -2,7 +2,7 @@ import { type Message, type ChatInputCommandInteraction, type InteractionRespons
 import { shuffleArray } from '../random/shuffleUtils'
 import { EmbedBuilder } from 'discord.js'
 
-export const ShowLoadingScreen = async (interaction: ChatInputCommandInteraction): Promise<Message<boolean> | InteractionResponse<boolean>> => {
+export const ShowLoadingMessage = async (interaction: ChatInputCommandInteraction): Promise<Message<boolean> | InteractionResponse<boolean>> => {
   try {
     const loadingMessage: string = shuffleArray(LOADING_MESSAGES)[0]
     const loadingEmbed = new EmbedBuilder()
