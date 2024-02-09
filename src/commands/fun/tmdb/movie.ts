@@ -28,7 +28,7 @@ export class MovieCommand extends Command {
             .setDescription('The name of the movie.')
             .setRequired(true)
         ), {
-      idHints: ['1205276006420709427']
+      idHints: ['1205276006420709427', '1205317481795686480']
     })
   }
 

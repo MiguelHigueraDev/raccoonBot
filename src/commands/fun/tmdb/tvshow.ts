@@ -28,7 +28,7 @@ export class TvShowCommand extends Command {
             .setDescription('The name of the show.')
             .setRequired(true)
         ), {
-      idHints: ['1205308301751885844']
+      idHints: ['1205308301751885844', '1205317483909611531']
     })
   }
 
