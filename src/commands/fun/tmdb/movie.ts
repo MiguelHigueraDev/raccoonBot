@@ -82,6 +82,8 @@ export class MovieCommand extends Command {
         if (msgStillExists == null) return
         return await loadingMessage.edit({ embeds: [embed], components: [buttonRow] })
       } else {
+        const msgStillExists = await interaction.channel?.messages.fetch(loadingMessage.id).catch(() => null)
+        if (msgStillExists == null) return
         return await loadingMessage.edit({
           content: StringAlerts.WARN('Movie not found.'),
           embeds: []
@@ -89,6 +91,8 @@ export class MovieCommand extends Command {
       }
     } catch (error) {
       console.error(error)
+      const msgStillExists = await interaction.channel?.messages.fetch(loadingMessage.id).catch(() => null)
+      if (msgStillExists == null) return
       return await loadingMessage.edit({
         content: StringAlerts.ERROR('Error fetching data about the movie.'),
         embeds: []
