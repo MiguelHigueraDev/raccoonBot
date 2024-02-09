@@ -1,7 +1,8 @@
 export const EMOJIS = {
   fullBar: '<:full_bar:1204225171343413288>',
   halfBar: '<:half_bar:1204225156218880150>',
-  emptyBar: '<:empty_bar:1204225133485494312>'
+  emptyBar: '<:empty_bar:1204225133485494312>',
+  loading: '<a:loading:1205300536396484659>'
 }
 
 export const EMOJI_PERCENTAGES = {
