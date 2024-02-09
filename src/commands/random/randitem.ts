@@ -3,6 +3,7 @@ import type { ChatInputCommandInteraction, InteractionResponse, Message } from '
 import Alerts from '../../lib/alerts/alerts'
 import { shuffleArray } from '../../lib/random/shuffleUtils'
 import { splitString } from '../../lib/arrays/arrayUtils'
+import { checkChannelPermissions } from '../../lib/permissions/checkPermissions'
 
 export class RandItemCommand extends Command {
   public constructor (context: Command.LoaderContext, options: Command.Options) {
@@ -32,6 +33,13 @@ export class RandItemCommand extends Command {
   }
 
   public async chatInputRun (interaction: ChatInputCommandInteraction): Promise<undefined | InteractionResponse<boolean> | Message<boolean>> {
+    if (interaction.guild != null) {
+      const hasPermission = await checkChannelPermissions(interaction.guild.id, interaction.user.id, interaction.channelId)
+      if (!hasPermission) {
+        return await Alerts.ERROR(interaction, 'I can\'t send messages to this channel! Please try another one.', true)
+      }
+    }
+
     const list = interaction.options.getString('list', true)
     const array = splitString(list)
 
