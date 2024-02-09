@@ -2,8 +2,8 @@ import { Command } from '@sapphire/framework'
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, type ChatInputCommandInteraction } from 'discord.js'
 import { config } from 'dotenv'
 import { type CastResult, type Cast, type Movie, type MovieResult, type MovieResults, type KeywordsResult, type Keyword } from '../../../lib/interface/tmdb'
-import Alerts from '../../../lib/alerts/alerts'
 import { ShowLoadingScreen } from '../../../lib/api/loadingMessage'
+import StringAlerts from '../../../lib/alerts/stringAlerts'
 config()
 const TMDB_KEY = process.env.TMDB_KEY
 
@@ -80,13 +80,19 @@ export class MovieCommand extends Command {
         // Check if message was deleted to prevent crash before editing loading
         const msgStillExists = await interaction.channel?.messages.fetch(loadingMessage.id).catch(() => null)
         if (msgStillExists == null) return
-        await loadingMessage.edit({ embeds: [embed], components: [buttonRow] })
+        return await loadingMessage.edit({ embeds: [embed], components: [buttonRow] })
       } else {
-        return await Alerts.WARN(interaction, 'Movie not found.', true)
+        return await loadingMessage.edit({
+          content: StringAlerts.WARN('Movie not found.'),
+          embeds: []
+        })
       }
     } catch (error) {
       console.error(error)
-      return await Alerts.ERROR(interaction, 'Error fetching data about the movie.', true)
+      return await loadingMessage.edit({
+        content: StringAlerts.ERROR('Error fetching data about the movie.'),
+        embeds: []
+      })
     }
   }
 
