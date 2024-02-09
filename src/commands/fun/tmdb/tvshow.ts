@@ -38,54 +38,8 @@ export class TvShowCommand extends Command {
     try {
       const partialShowQuery = await fetch(`https://api.themoviedb.org/3/search/tv?api_key=${TMDB_KEY}&query=${tvShow}&include_adult=false`)
       const partialShowQueryData: TvShowResults = await partialShowQuery.json()
-      if (partialShowQueryData.results != null && partialShowQueryData.results.length > 0) {
-        const partialShowJson: TvShowResult = partialShowQueryData.results[0]
-        const id = partialShowJson.id
-        // Now fetch more data about the show
-        const fullShowQuery = await fetch(`https://api.themoviedb.org/3/tv/${id}?api_key=${TMDB_KEY}`)
-        const fullShowData: TvShow = await fullShowQuery.json()
-        const {
-          original_name: originalName, name: showName, overview: showSynopsis,
-          first_air_date: firstAirDate, last_air_date: lastAirDate, genres,
-          poster_path: poster, number_of_seasons: numberOfSeasons,
-          number_of_episodes: numberOfEpisodes, in_production: inProduction,
-          status
-        } = fullShowData
-
-        // Format show data
-        let finalTitle = ''
-        if (originalName === showName) {
-          finalTitle = showName
-        } else {
-          finalTitle = `${showName} (${originalName})`
-        }
-        const genreString = genres.map((genre) => genre.name).join(', ')
-
-        const firstAirYear = firstAirDate.substring(0, 4)
-        let lastAirYear = lastAirDate.substring(0, 4)
-        if (inProduction) lastAirYear = ''
-
-        // Fetch cast
-        const castQuery = await fetch(`https://api.themoviedb.org/3/tv/${id}/credits?api_key=${TMDB_KEY}`)
-        const castData: CastResult = await castQuery.json()
-        const selectedCast: Cast[] = castData.cast.slice(0, 7)
-        const castString = selectedCast.map((actor) => actor.name).join(', ')
-
-        // Fetch keywords
-        const keywordsQuery = await fetch(`https://api.themoviedb.org/3/tv/${id}/keywords?api_key=${TMDB_KEY}`)
-        const keywordsData: ShowKeywordsResult = await keywordsQuery.json()
-        const selectedKeywords: Keyword[] = keywordsData.results.slice(0, 10)
-        const keywordsString = selectedKeywords.map((keyword) => keyword.name).join(', ')
-
-        // Make embed and button
-        const embed = this.makeEmbed(finalTitle, poster, numberOfSeasons, numberOfEpisodes, status, firstAirYear, lastAirYear, genreString, showSynopsis, castString, keywordsString)
-        const buttonRow = this.makeWatchButton(id)
-
-        // Check if message was deleted to prevent crash before editing loading
-        const msgStillExists = await interaction.channel?.messages.fetch(loadingMessage.id).catch(() => null)
-        if (msgStillExists == null) return
-        return await loadingMessage.edit({ embeds: [embed], components: [buttonRow] })
-      } else {
+      // Check if there are any results
+      if (partialShowQueryData.results == null || partialShowQueryData.results.length < 1) {
         const msgStillExists = await interaction.channel?.messages.fetch(loadingMessage.id).catch(() => null)
         if (msgStillExists == null) return
         return await loadingMessage.edit({
@@ -93,6 +47,53 @@ export class TvShowCommand extends Command {
           embeds: []
         })
       }
+
+      const partialShowJson: TvShowResult = partialShowQueryData.results[0]
+      const id = partialShowJson.id
+      // Now fetch more data about the show
+      const fullShowQuery = await fetch(`https://api.themoviedb.org/3/tv/${id}?api_key=${TMDB_KEY}`)
+      const fullShowData: TvShow = await fullShowQuery.json()
+      const {
+        original_name: originalName, name: showName, overview: showSynopsis,
+        first_air_date: firstAirDate, last_air_date: lastAirDate, genres,
+        poster_path: poster, number_of_seasons: numberOfSeasons,
+        number_of_episodes: numberOfEpisodes, in_production: inProduction,
+        status
+      } = fullShowData
+
+      // Format show data
+      let finalTitle = ''
+      if (originalName === showName) {
+        finalTitle = showName
+      } else {
+        finalTitle = `${showName} (${originalName})`
+      }
+      const genreString = genres.map((genre) => genre.name).join(', ')
+
+      const firstAirYear = firstAirDate.substring(0, 4)
+      let lastAirYear = lastAirDate.substring(0, 4)
+      if (inProduction) lastAirYear = ''
+
+      // Fetch cast
+      const castQuery = await fetch(`https://api.themoviedb.org/3/tv/${id}/credits?api_key=${TMDB_KEY}`)
+      const castData: CastResult = await castQuery.json()
+      const selectedCast: Cast[] = castData.cast.slice(0, 7)
+      const castString = selectedCast.map((actor) => actor.name).join(', ')
+
+      // Fetch keywords
+      const keywordsQuery = await fetch(`https://api.themoviedb.org/3/tv/${id}/keywords?api_key=${TMDB_KEY}`)
+      const keywordsData: ShowKeywordsResult = await keywordsQuery.json()
+      const selectedKeywords: Keyword[] = keywordsData.results.slice(0, 10)
+      const keywordsString = selectedKeywords.map((keyword) => keyword.name).join(', ')
+
+      // Make embed and button
+      const embed = this.makeEmbed(finalTitle, poster, numberOfSeasons, numberOfEpisodes, status, firstAirYear, lastAirYear, genreString, showSynopsis, castString, keywordsString)
+      const buttonRow = this.makeWatchButton(id)
+
+      // Check if message was deleted to prevent crash before editing loading
+      const msgStillExists = await interaction.channel?.messages.fetch(loadingMessage.id).catch(() => null)
+      if (msgStillExists == null) return
+      return await loadingMessage.edit({ embeds: [embed], components: [buttonRow] })
     } catch (error) {
       console.error(error)
       const msgStillExists = await interaction.channel?.messages.fetch(loadingMessage.id).catch(() => null)
