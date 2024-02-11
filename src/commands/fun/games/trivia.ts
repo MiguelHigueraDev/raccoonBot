@@ -1,8 +1,8 @@
 import { Command } from '@sapphire/framework'
-import TRIVIA_CATEGORIES from '../../constants/externalApis/openTdb'
+import TRIVIA_CATEGORIES from '../../../constants/externalApis/openTdb'
 import { type ChatInputCommandInteraction, EmbedBuilder } from 'discord.js'
-import Alerts from '../../lib/alerts/alerts'
-import { shuffleArray } from '../../lib/random/shuffleUtils'
+import Alerts from '../../../lib/alerts/alerts'
+import { shuffleArray } from '../../../lib/random/shuffleUtils'
 import he from 'he'
 
 export class TriviaCommand extends Command {
