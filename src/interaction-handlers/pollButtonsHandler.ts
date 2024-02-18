@@ -3,7 +3,7 @@ import { EmbedBuilder, type ButtonInteraction } from 'discord.js'
 import pollHandler from '../lib/database/pollHandler'
 import StringAlerts from '../lib/alerts/stringAlerts'
 import { emojiMap } from '../commands/utility/poll'
-import { EMOJI_PERCENTAGES } from '../constants/emojis/emojis'
+import { getPercentageBar } from '../constants/emojis/emojis'
 
 export class PollButtonsHandler extends InteractionHandler {
   public constructor (context: InteractionHandler.LoaderContext, options: InteractionHandler.Options) {
@@ -29,7 +29,7 @@ export class PollButtonsHandler extends InteractionHandler {
 
     // Check if the poll has expired
     if (await pollHandler.checkIfPollExpired(pollId)) {
-      return await interaction.user.send(StringAlerts.ERROR('You can\'t vote, this poll has expired.'))
+      return await interaction.reply({ content: StringAlerts.ERROR('You can\'t vote, this poll has expired.'), ephemeral: true })
     }
 
     // Get Option number from button custom ID
@@ -39,11 +39,11 @@ export class PollButtonsHandler extends InteractionHandler {
     // Finally get the optionId
     const optionId: number = await pollHandler.getOptionId(pollId, optionText)
 
-    if (optionId == null) return await interaction.user.send(StringAlerts.ERROR('Error fetching poll data.'))
+    if (optionId == null) return await interaction.reply({ content: StringAlerts.ERROR('Error fetching poll data.'), ephemeral: true })
 
     const checkAlreadyVoted = await pollHandler.checkIfUserVoted(pollId, interaction.user.id)
     if (checkAlreadyVoted === true) {
-      return await interaction.user.send(StringAlerts.WARN('You have already voted in this poll.'))
+      return await interaction.reply({ content: StringAlerts.WARN('You have already voted in this poll. You can\'t vote again.'), ephemeral: true })
     } else {
       // Add vote
       await pollHandler.addVote(pollId, interaction.user.id, optionId)
@@ -51,7 +51,7 @@ export class PollButtonsHandler extends InteractionHandler {
 
     // Get votes and extra info
     const votes: VoteObject[] = await pollHandler.getVotes(pollId)
-    if (votes == null) return await interaction.user.send(StringAlerts.ERROR('Error fetching poll data.'))
+    if (votes == null) return await interaction.reply({ content: StringAlerts.ERROR('Error fetching poll data.'), ephemeral: true })
     const totalVotes: number = votes.reduce((total, vote) => Number(total) + Number(vote.voteCount), 0)
     const creatorId: string = votes[0].userId
     const expirationDate: Date = votes[0].expirationDate
@@ -85,30 +85,6 @@ const getPollEmbed = async (pollId: number, question: string, total: number, vot
   }
   pollEmbed.addFields({ name: `Total votes: ${Number(total)}`, value: `Expires <t:${expirationDateUnix}:R>` })
   return pollEmbed
-}
-
-const getPercentageBar = (percentage: number) => {
-  if (percentage === 0) return EMOJI_PERCENTAGES[0]
-  if (percentage < 6) return EMOJI_PERCENTAGES[5]
-  if (percentage < 11) return EMOJI_PERCENTAGES[10]
-  if (percentage < 16) return EMOJI_PERCENTAGES[15]
-  if (percentage < 21) return EMOJI_PERCENTAGES[20]
-  if (percentage < 26) return EMOJI_PERCENTAGES[25]
-  if (percentage < 31) return EMOJI_PERCENTAGES[30]
-  if (percentage < 36) return EMOJI_PERCENTAGES[35]
-  if (percentage < 41) return EMOJI_PERCENTAGES[40]
-  if (percentage < 46) return EMOJI_PERCENTAGES[45]
-  if (percentage < 51) return EMOJI_PERCENTAGES[50]
-  if (percentage < 56) return EMOJI_PERCENTAGES[55]
-  if (percentage < 61) return EMOJI_PERCENTAGES[60]
-  if (percentage < 66) return EMOJI_PERCENTAGES[65]
-  if (percentage < 71) return EMOJI_PERCENTAGES[70]
-  if (percentage < 76) return EMOJI_PERCENTAGES[75]
-  if (percentage < 81) return EMOJI_PERCENTAGES[80]
-  if (percentage < 86) return EMOJI_PERCENTAGES[85]
-  if (percentage < 91) return EMOJI_PERCENTAGES[90]
-  if (percentage < 96) return EMOJI_PERCENTAGES[95]
-  return EMOJI_PERCENTAGES[100]
 }
 
 export interface VoteObject {
