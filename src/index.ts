@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client'
 import { SapphireClient, container } from '@sapphire/framework'
-import { GatewayIntentBits } from 'discord.js'
+import { ActivityType, GatewayIntentBits } from 'discord.js'
 import { config } from 'dotenv'
 import { registerSubcommands } from './registerSubcommands'
 import birthdaySchedule from './schedules/birthday'
@@ -11,7 +11,13 @@ const token = process.env.BOT_TOKEN
 
 const client = new SapphireClient({
   intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent, GatewayIntentBits.GuildPresences, GatewayIntentBits.GuildMembers],
-  loadMessageCommandListeners: true
+  loadMessageCommandListeners: true,
+  presence: {
+    activities: [{
+      name: 'raccoonbot.vercel.app',
+      type: ActivityType.Watching
+    }]
+  }
 })
 
 // Database init
