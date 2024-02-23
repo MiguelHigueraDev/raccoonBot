@@ -25,4 +25,3 @@ jobs:
           script: |
             echo $PATH
             echo $USER
-            whoami
