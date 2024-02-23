@@ -16,7 +16,7 @@ const client = new SapphireClient({
     activities: [{
       name: 'custom',
       type: ActivityType.Custom,
-      state: '➡️ raccoonbot.vercel.app'
+      state: 'raccoonbot.vercel.app'
     }]
   }
 })
