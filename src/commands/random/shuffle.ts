@@ -4,6 +4,7 @@ import { shuffleArray } from '../../lib/random/shuffleUtils'
 import { splitString } from '../../lib/arrays/arrayUtils'
 import { checkChannelPermissions } from '../../lib/permissions/checkPermissions'
 import Alerts from '../../lib/alerts/alerts'
+import checkMessageStillExists from '../../lib/misc/checkMessageStillExists'
 
 export class ShuffleCommand extends Command {
   public constructor (context: Command.LoaderContext, options: Command.Options) {
@@ -46,15 +47,13 @@ export class ShuffleCommand extends Command {
     const shuffles = (array.length <= 3) ? array.length * 2 : array.length
     for (let i = 0; i < shuffles; i++) {
       // Check if message was deleted to prevent crash
-      const msgStillExists = await interaction.channel?.messages.fetch(reply.id).catch(() => null)
-      if (msgStillExists == null) return
+      if (!checkMessageStillExists(interaction, reply.id)) return
 
       await reply.edit({ content: shuffleArray(array).join(', ') })
       await new Promise(resolve => setTimeout(resolve, 700))
     }
     const finalRoll: string = shuffleArray(array).join(', ')
-    const msgStillExists = await interaction.channel?.messages.fetch(reply.id).catch(() => null)
-    if (msgStillExists == null) return
+    if (!checkMessageStillExists(interaction, reply.id)) return
     return await reply.edit({ content: `**${finalRoll}**` })
   }
 }

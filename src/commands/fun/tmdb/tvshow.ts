@@ -4,6 +4,7 @@ import { ShowLoadingMessage } from '../../../lib/api/loadingMessage'
 import { config } from 'dotenv'
 import { type Keyword, type Cast, type CastResult, type TvShow, type TvShowResult, type TvShowResults, type ShowKeywordsResult } from '../../../lib/interface/tmdb'
 import StringAlerts from '../../../lib/alerts/stringAlerts'
+import checkMessageStillExists from '../../../lib/misc/checkMessageStillExists'
 config()
 const TMDB_KEY = process.env.TMDB_KEY
 
@@ -40,8 +41,7 @@ export class TvShowCommand extends Command {
       const partialShowQueryData: TvShowResults = await partialShowQuery.json()
       // Check if there are any results
       if (partialShowQueryData.results == null || partialShowQueryData.results.length < 1) {
-        const msgStillExists = await interaction.channel?.messages.fetch(loadingMessage.id).catch(() => null)
-        if (msgStillExists == null) return
+        if (!checkMessageStillExists(interaction, loadingMessage.id)) return
         return await loadingMessage.edit({
           content: StringAlerts.WARN('Show not found.'),
           embeds: []
@@ -91,13 +91,11 @@ export class TvShowCommand extends Command {
       const buttonRow = this.makeWatchButton(id)
 
       // Check if message was deleted to prevent crash before editing loading
-      const msgStillExists = await interaction.channel?.messages.fetch(loadingMessage.id).catch(() => null)
-      if (msgStillExists == null) return
+      if (!checkMessageStillExists(interaction, loadingMessage.id)) return
       return await loadingMessage.edit({ embeds: [embed], components: [buttonRow] })
     } catch (error) {
       console.error(error)
-      const msgStillExists = await interaction.channel?.messages.fetch(loadingMessage.id).catch(() => null)
-      if (msgStillExists == null) return
+      if (!checkMessageStillExists(interaction, loadingMessage.id)) return
       return await loadingMessage.edit({
         content: StringAlerts.ERROR('Error fetching data about the show.'),
         embeds: []

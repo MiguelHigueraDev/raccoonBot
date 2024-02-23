@@ -4,6 +4,7 @@ import { config } from 'dotenv'
 import { type CastResult, type Cast, type Movie, type MovieResult, type MovieResults, type KeywordsResult, type Keyword } from '../../../lib/interface/tmdb'
 import { ShowLoadingMessage } from '../../../lib/api/loadingMessage'
 import StringAlerts from '../../../lib/alerts/stringAlerts'
+import checkMessageStillExists from '../../../lib/misc/checkMessageStillExists'
 config()
 const TMDB_KEY = process.env.TMDB_KEY
 
@@ -40,8 +41,7 @@ export class MovieCommand extends Command {
       const partialMovieQueryData: MovieResults = await partialMovieQuery.json()
 
       if (partialMovieQueryData.results == null || partialMovieQueryData.results.length < 1) {
-        const msgStillExists = await interaction.channel?.messages.fetch(loadingMessage.id).catch(() => null)
-        if (msgStillExists == null) return
+        if (!checkMessageStillExists(interaction, loadingMessage.id)) return
         return await loadingMessage.edit({
           content: StringAlerts.WARN('Movie not found.'),
           embeds: []
@@ -86,13 +86,11 @@ export class MovieCommand extends Command {
       const buttonRow = this.makeWatchButton(id)
 
       // Check if message was deleted to prevent crash before editing loading
-      const msgStillExists = await interaction.channel?.messages.fetch(loadingMessage.id).catch(() => null)
-      if (msgStillExists == null) return
+      if (!checkMessageStillExists(interaction, loadingMessage.id)) return
       return await loadingMessage.edit({ embeds: [embed], components: [buttonRow] })
     } catch (error) {
       console.error(error)
-      const msgStillExists = await interaction.channel?.messages.fetch(loadingMessage.id).catch(() => null)
-      if (msgStillExists == null) return
+      if (!checkMessageStillExists(interaction, loadingMessage.id)) return
       return await loadingMessage.edit({
         content: StringAlerts.ERROR('Error fetching data about the movie.'),
         embeds: []

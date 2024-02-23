@@ -4,6 +4,7 @@ import { type ChatInputCommandInteraction, EmbedBuilder } from 'discord.js'
 import Alerts from '../../../lib/alerts/alerts'
 import { shuffleArray } from '../../../lib/random/shuffleUtils'
 import he from 'he'
+import checkMessageStillExists from '../../../lib/misc/checkMessageStillExists'
 
 export class TriviaCommand extends Command {
   public constructor (context: Command.LoaderContext, options: Command.Options) {
@@ -85,8 +86,7 @@ export class TriviaCommand extends Command {
       collector.on('collect', async (message): Promise<any> => {
         if (message.author.bot) return
         // Check that the message still exists to avoid editing a non existing message
-        const msgCheck = await interaction.channel?.messages.fetch(trivia.id).catch(() => null)
-        if (msgCheck == null) return
+        if (!checkMessageStillExists(interaction, trivia.id)) return
         if (parseInt(message.content) !== 1 && parseInt(message.content) !== 2 && parseInt(message.content) !== 3 && parseInt(message.content) !== 4) return
 
         if (participants.includes(message.author.id)) {
@@ -107,8 +107,7 @@ export class TriviaCommand extends Command {
       collector.on('end', async (): Promise<any> => {
         this.container.trivias = this.container.trivias.filter(trivia => trivia !== `${interaction.guild?.id}:${interaction.channel?.id}`)
         // Check that the message still exists to avoid editing a non existing message
-        const msgCheck = await interaction.channel?.messages.fetch(trivia.id).catch(() => null)
-        if (msgCheck == null) return
+        if (!checkMessageStillExists(interaction, trivia.id)) return
         if (!answered) {
           return await interaction.editReply({ content: `It seems like no one got the correct answer :( It was **${correctAnswer}**`, embeds: [] })
         }
