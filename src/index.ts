@@ -14,8 +14,9 @@ const client = new SapphireClient({
   loadMessageCommandListeners: true,
   presence: {
     activities: [{
-      name: 'raccoonbot.vercel.app',
-      type: ActivityType.Watching
+      name: 'custom',
+      type: ActivityType.Custom,
+      state: '➡️ raccoonbot.vercel.app'
     }]
   }
 })
