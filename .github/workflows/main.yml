@@ -29,6 +29,6 @@ jobs:
             npm install
             cd src
             npx prisma generate
-            tsc
-            pm2 restart bot
+            npx tsc
+            npx pm2 restart bot
           
