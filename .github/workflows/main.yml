@@ -23,5 +23,11 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 22
           script: |
-            echo $PATH
-            echo $USER
+            cd ~/repos/raccoonBot-ts
+            git pull origin main
+            git status
+            npm install
+            cd src
+            npx prisma generate
+            npx tsc
+            npx pm2 restart bot
