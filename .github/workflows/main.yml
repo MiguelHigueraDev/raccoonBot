@@ -23,7 +23,8 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 22
           script: |
-            echo $PATH
+            export NVM_DIR=~/.nvm
+            source ~/.nvm/nvm.sh
             cd ~/repos/raccoonBot-ts
             git pull origin main
             git status
