@@ -197,7 +197,7 @@ export class HangmanCommand extends Command {
     } else if (gameStatus === this.GAME_STATUSES.WON) {
       guessString = ':white_check_mark: **You win!**'
     } else if (gameStatus === this.GAME_STATUSES.LOST) {
-      guessString = ':x: **You lose!**'
+      guessString = ':x: You lose! The word was: **' + word + '**'
     }
 
     // Update game status with next character
