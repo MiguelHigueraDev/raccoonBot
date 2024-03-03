@@ -2,7 +2,7 @@
 
 A multi-purpose discord bot written using TypeScript + [Sapphire Framework](https://www.sapphirejs.dev/) + [Prisma](https://github.com/prisma/prisma).
 
-Still a WIP, it is a rewrite in progress of the [original raccoonBot](https://github.com/MiguelHigueraDev/raccoonBot).
+Still a work in progress.
 
 ## Features
 
