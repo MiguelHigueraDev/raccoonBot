@@ -45,7 +45,7 @@ export class HangmanCommand extends Command {
     const onlyLettersRegex = /^(?:[a-zA-Z]\s*){3,}$/
     const input = interaction.options.getString('word', true)
     if (!onlyLettersRegex.test(input)) {
-      return await Alerts.WARN(interaction, 'You can only enter letters for the word. (a-z)', true)
+      return await Alerts.WARN(interaction, 'You can only enter letters (a-z) and spaces for the word.', true)
     }
     const invited = interaction.options.getUser('player', true)
     if (invited.id === interaction.user.id) return await Alerts.WARN(interaction, 'You cannot play hangman with yourself!\n\nInvite another player!', true)
@@ -100,11 +100,10 @@ export class HangmanCommand extends Command {
       collector.on('collect', async (i) => {
         // Check if the user who clicked the button was the invited user
         if (i.user.id === invited.id) {
+          acceptedOrDeclined = true
           if (i.customId === 'accept-hangman-invite') {
-            acceptedOrDeclined = true
             await this.startGame(invited, inviteMessage, word)
           } else {
-            acceptedOrDeclined = true
             await message.edit({ content: `<@${inviter.id}>, ${invited.displayName} declined your invite to play hangman.`, embeds: [], components: [] })
             await delay(30000)
             await message.delete()
