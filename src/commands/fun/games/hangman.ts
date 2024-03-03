@@ -206,10 +206,9 @@ export class HangmanCommand extends Command {
     await interaction.editReply({
       content: `
 ${nextCharacter}
---------------
+**--------------**
 
-**HANGMAN**
-Guess one letter at a time
+**HANGMAN**: Enter a letter to guess
 
 **${guessedWord}**
 
