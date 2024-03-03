@@ -1,9 +1,10 @@
 import { Command } from '@sapphire/framework'
-import { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, type User, type ChatInputCommandInteraction, ComponentType, type Message } from 'discord.js'
+import { type User, type ChatInputCommandInteraction, ComponentType, type Message } from 'discord.js'
 import Alerts from '../../../lib/alerts/alerts'
 import { addMinutes, getUnixTime } from 'date-fns'
 import { delay } from '../../../lib/misc/delay'
 import { type HangmanInvite } from '../../../lib/interface/hangmanInvite'
+import { makeInvite } from '../../../lib/games/makeInvite'
 
 export class HangmanCommand extends Command {
   public constructor (context: Command.LoaderContext, options: Command.Options) {
@@ -59,7 +60,7 @@ export class HangmanCommand extends Command {
 
     const twoMinutesInTheFuture = getUnixTime(addMinutes(Date.now(), 2))
     // Send invite to player
-    const invite = this.makeInvite(interaction.user.id, invited.displayName, twoMinutesInTheFuture)
+    const invite = makeInvite(interaction.user.id, invited.displayName, twoMinutesInTheFuture, 'Hangman')
     if (interaction.channel == null) return
     // Send a message to the player so interaction is replied. Delete it immediately.
     const preMessage = await interaction.reply({ content: 'Sending invite...' })
@@ -68,26 +69,6 @@ export class HangmanCommand extends Command {
     // Send a new message instead of editing the interaction to prevent cheating by seeing the command input.
     const message = await interaction.channel.send({ content: 'Sending invite...' })
     await this.sendInvite(invite, message, invited, interaction.user, word)
-  }
-
-  private makeInvite (inviter: string, invited: string, timestamp: number) {
-    const hangmanEmbed = new EmbedBuilder()
-      .setColor('Blurple')
-      .setTitle('Hangman Invite')
-      .setDescription(`**${invited}**, **<@${inviter}>** has invited you to play hangman!\n\n**Accept invite?**\n\nInvite expires <t:${timestamp}:R>`)
-
-    const acceptButton = new ButtonBuilder()
-      .setCustomId('accept-hangman-invite')
-      .setLabel('Accept')
-      .setStyle(ButtonStyle.Success)
-
-    const declineButton = new ButtonBuilder()
-      .setCustomId('decline-hangman-invite')
-      .setLabel('Decline')
-      .setStyle(ButtonStyle.Danger)
-
-    const row = new ActionRowBuilder<ButtonBuilder>().addComponents(acceptButton, declineButton)
-    return { embeds: [hangmanEmbed], components: [row] }
   }
 
   private async sendInvite (invite: HangmanInvite, message: Message, invited: User, inviter: User, word: string) {
