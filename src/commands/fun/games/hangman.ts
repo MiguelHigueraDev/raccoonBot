@@ -49,8 +49,8 @@ export class HangmanCommand extends Command {
       return await Alerts.WARN(interaction, 'You can only enter letters for the word. (a-z)', true)
     }
     const invited = interaction.options.getUser('player', true)
-    // if (player.id === interaction.user.id) return await Alerts.WARN(interaction, 'You cannot play hangman with yourself!\n\nInvite another player!', true)
-    // if (invited.bot) return await Alerts.WARN(interaction, 'You can\'t play hangman with a bot!\n\nInvite a human player!', true)
+    if (invited.id === interaction.user.id) return await Alerts.WARN(interaction, 'You cannot play hangman with yourself!\n\nInvite another player!', true)
+    if (invited.bot) return await Alerts.WARN(interaction, 'You can\'t play hangman with a bot!\n\nInvite a human player!', true)
 
     const word = input.toLowerCase()
     // This additional check is just for safety, but it shouldn't be necessary
