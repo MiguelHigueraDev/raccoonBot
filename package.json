@@ -1,6 +1,6 @@
 {
   "name": "misfit-bot-ts",
-  "version": "0.6.0",
+  "version": "0.6.2",
   "description": "A rewrite of Misfit Bot using TypeScript and Sapphire",
   "main": "index.ts",
   "scripts": {
