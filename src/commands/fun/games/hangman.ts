@@ -122,6 +122,8 @@ export class HangmanCommand extends Command {
   }
 
   private async startGame (invited: User, interaction: ChatInputCommandInteraction, word: string) {
+    // Save current guild and channel to prevent multiple trivias in the same channel
+    this.container.hangmanGames.push(`${interaction.guild?.id}:${interaction.channel?.id}`)
     // Store current damage. At 5 player loses the game
     let damage = 0
     const attemptedLetters: string[] = []
@@ -165,6 +167,11 @@ export class HangmanCommand extends Command {
           }
         }
       }
+    })
+
+    collector.on('end', () => {
+      // Remove hangman game so another one can be played in the same channel
+      this.container.hangmanGames = this.container.hangmanGames.filter((id) => id !== `${interaction.guild?.id}:${interaction.channel?.id}`)
     })
   }
 

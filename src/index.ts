@@ -28,6 +28,7 @@ const prisma = new PrismaClient()
 declare module '@sapphire/pieces' {
   interface Container {
     trivias: string[]
+    hangmanGames: string[]
     db: PrismaClient
   }
 }
@@ -39,6 +40,7 @@ function loadSchedules (): void {
 }
 
 container.trivias = []
+container.hangmanGames = []
 container.db = prisma
 
 // Register option subcommands
