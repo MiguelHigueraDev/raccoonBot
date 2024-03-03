@@ -1,10 +1,9 @@
 import { Command } from '@sapphire/framework'
-import { type User, type ChatInputCommandInteraction, ComponentType, type Message } from 'discord.js'
+import { type User, type ChatInputCommandInteraction, type Message } from 'discord.js'
 import Alerts from '../../../lib/alerts/alerts'
 import { addMinutes, getUnixTime } from 'date-fns'
-import { delay } from '../../../lib/misc/delay'
-import { type HangmanInvite } from '../../../lib/interface/hangmanInvite'
-import { makeInvite } from '../../../lib/games/makeInvite'
+import invitesManager from '../../../lib/games/invitesManager'
+import { type InviteData } from '../../../lib/interface/gameInvite'
 
 export class HangmanCommand extends Command {
   public constructor (context: Command.LoaderContext, options: Command.Options) {
@@ -49,8 +48,8 @@ export class HangmanCommand extends Command {
       return await Alerts.WARN(interaction, 'You can only enter letters (a-z) and spaces for the word.', true)
     }
     const invited = interaction.options.getUser('player', true)
-    if (invited.id === interaction.user.id) return await Alerts.WARN(interaction, 'You cannot play hangman with yourself!\n\nInvite another player!', true)
-    if (invited.bot) return await Alerts.WARN(interaction, 'You can\'t play hangman with a bot!\n\nInvite a human player!', true)
+    // if (invited.id === interaction.user.id) return await Alerts.WARN(interaction, 'You cannot play hangman with yourself!\n\nInvite another player!', true)
+    // if (invited.bot) return await Alerts.WARN(interaction, 'You can\'t play hangman with a bot!\n\nInvite a human player!', true)
 
     const word = input.toLowerCase()
     // This additional check is just for safety, but it shouldn't be necessary
@@ -60,7 +59,8 @@ export class HangmanCommand extends Command {
 
     const twoMinutesInTheFuture = getUnixTime(addMinutes(Date.now(), 2))
     // Send invite to player
-    const invite = makeInvite(interaction.user.id, invited.displayName, twoMinutesInTheFuture, 'Hangman')
+    const inviteData: InviteData = { inviter: interaction.user, invited, timestamp: twoMinutesInTheFuture, game: 'Hangman' }
+    const invite = invitesManager.makeInvite(inviteData)
     if (interaction.channel == null) return
     // Send a message to the player so interaction is replied. Delete it immediately.
     const preMessage = await interaction.reply({ content: 'Sending invite...' })
@@ -68,40 +68,10 @@ export class HangmanCommand extends Command {
 
     // Send a new message instead of editing the interaction to prevent cheating by seeing the command input.
     const message = await interaction.channel.send({ content: 'Sending invite...' })
-    await this.sendInvite(invite, message, invited, interaction.user, word)
-  }
-
-  private async sendInvite (invite: HangmanInvite, message: Message, invited: User, inviter: User, word: string) {
-    try {
-      const inviteMessage = await message.edit({ ...invite, content: '' })
-      const collector = inviteMessage.createMessageComponentCollector({ componentType: ComponentType.Button, time: 120_000 })
-
-      // Keep track if the user accepted or declined the invite, so message isn't deleted after collector expiration.
-      let acceptedOrDeclined = false
-      collector.on('collect', async (i) => {
-        // Check if the user who clicked the button was the invited user
-        if (i.user.id === invited.id) {
-          acceptedOrDeclined = true
-          if (i.customId === 'accept-hangman-invite') {
-            await this.startGame(invited, inviteMessage, word)
-          } else {
-            await message.edit({ content: `<@${inviter.id}>, ${invited.displayName} declined your invite to play hangman.`, embeds: [], components: [] })
-            await delay(30000)
-            await message.delete()
-          }
-        }
-      })
-
-      collector.on('end', async () => {
-        if (!acceptedOrDeclined) {
-          await message.edit({ content: `<@${inviter.id}>, ${invited.displayName} didn't respond to the invite in time.`, embeds: [], components: [] })
-          await delay(30000)
-          await message.delete()
-        }
-      })
-    } catch (error) {
-      console.error(error)
-    }
+    await invitesManager.sendInvite(invite,
+      inviteData,
+      message,
+      async () => { await this.startGame(inviteData.invited, message, word) })
   }
 
   private async startGame (invited: User, message: Message, word: string) {
