@@ -48,8 +48,8 @@ export class HangmanCommand extends Command {
       return await Alerts.WARN(interaction, 'You can only enter letters (a-z) and spaces for the word.', true)
     }
     const invited = interaction.options.getUser('player', true)
-    // if (invited.id === interaction.user.id) return await Alerts.WARN(interaction, 'You cannot play hangman with yourself!\n\nInvite another player!', true)
-    // if (invited.bot) return await Alerts.WARN(interaction, 'You can\'t play hangman with a bot!\n\nInvite a human player!', true)
+    if (invited.id === interaction.user.id) return await Alerts.WARN(interaction, 'You cannot play hangman with yourself!\n\nInvite another player!', true)
+    if (invited.bot) return await Alerts.WARN(interaction, 'You can\'t play hangman with a bot!\n\nInvite a human player!', true)
 
     const word = input.toLowerCase()
     // This additional check is just for safety, but it shouldn't be necessary
@@ -71,10 +71,10 @@ export class HangmanCommand extends Command {
     await invitesManager.sendInvite(invite,
       inviteData,
       message,
-      async () => { await this.startGame(inviteData.invited, message, word) })
+      async () => { await this.startHangmanGame(inviteData.invited, message, word) })
   }
 
-  private async startGame (invited: User, message: Message, word: string) {
+  private async startHangmanGame (invited: User, message: Message, word: string) {
     try {
       // Save current guild and channel to prevent multiple trivias in the same channel
       this.container.hangmanGames.push(`${message.guild?.id}:${message.channel?.id}`)
@@ -82,7 +82,7 @@ export class HangmanCommand extends Command {
       let damage = 0
       const attemptedLetters: string[] = []
       // Remove previous embeds and components and show message
-      await this.updateGameStatus(message, word, [], damage, this.GAME_STATUSES.GAME_START)
+      await this.updateHangmanGameStatus(message, word, [], damage, this.GAME_STATUSES.GAME_START)
       if (message.channel == null) return
 
       const collector = message.channel.createMessageCollector({ time: 900_000 })
@@ -106,17 +106,17 @@ export class HangmanCommand extends Command {
               const playerWon = this.checkIfPlayerWon(word, attemptedLetters)
               if (playerWon) {
                 collector.stop()
-                await this.updateGameStatus(message, word, attemptedLetters, damage, this.GAME_STATUSES.WON)
+                await this.updateHangmanGameStatus(message, word, attemptedLetters, damage, this.GAME_STATUSES.WON)
               } else {
-                await this.updateGameStatus(message, word, attemptedLetters, damage, this.GAME_STATUSES.CORRECT)
+                await this.updateHangmanGameStatus(message, word, attemptedLetters, damage, this.GAME_STATUSES.CORRECT)
               }
             } else {
               damage++
               if (damage === 5) {
                 collector.stop()
-                await this.updateGameStatus(message, word, attemptedLetters, damage, this.GAME_STATUSES.LOST)
+                await this.updateHangmanGameStatus(message, word, attemptedLetters, damage, this.GAME_STATUSES.LOST)
               } else {
-                await this.updateGameStatus(message, word, attemptedLetters, damage, this.GAME_STATUSES.INCORRECT)
+                await this.updateHangmanGameStatus(message, word, attemptedLetters, damage, this.GAME_STATUSES.INCORRECT)
               }
             }
           }
@@ -132,7 +132,7 @@ export class HangmanCommand extends Command {
     }
   }
 
-  private async updateGameStatus (message: Message, word: string, attemptedLetters: string[], damage: number, gameStatus: number) {
+  private async updateHangmanGameStatus (message: Message, word: string, attemptedLetters: string[], damage: number, gameStatus: number) {
     // Replace all letters that haven't been guessed yet with dashes but keep spaces intact
     const guessedWord = word
       .split('')
@@ -162,11 +162,10 @@ export class HangmanCommand extends Command {
 
     await message.edit({
       content: `
+# Hangman
+
+Enter a letter to guess!
 ${nextCharacter}
-**--------------**
-
-**HANGMAN**: Enter a letter to guess
-
 **${guessedWord}**
 
 ${guessString}

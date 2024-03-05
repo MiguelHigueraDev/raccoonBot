@@ -5,9 +5,9 @@
  */
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, type ChatInputCommandInteraction, EmbedBuilder, Message, ComponentType } from 'discord.js'
 import { delay } from '../misc/delay'
-import { type GameInvite, type InviteData } from '../interface/gameInvite'
+import { type InviteEmbed, type InviteData } from '../interface/gameInvite'
 
-const makeInvite = (data: InviteData): GameInvite => {
+const makeInvite = (data: InviteData): InviteEmbed => {
   const inviteEmbed = new EmbedBuilder()
     .setColor('Blurple')
     .setTitle(`${data.game} Invite`)
@@ -27,7 +27,7 @@ const makeInvite = (data: InviteData): GameInvite => {
   return { embeds: [inviteEmbed], components: [row] }
 }
 
-const sendInvite = async (invite: GameInvite, data: InviteData, message: Message | ChatInputCommandInteraction, startGame: InviteCallBack) => {
+const sendInvite = async (invite: InviteEmbed, data: InviteData, message: Message | ChatInputCommandInteraction, startGame: InviteCallBack) => {
   try {
     // First check if message is an interaction or an actual message
     let inviteMessage
@@ -39,15 +39,20 @@ const sendInvite = async (invite: GameInvite, data: InviteData, message: Message
 
     const collector = inviteMessage.createMessageComponentCollector({ componentType: ComponentType.Button, time: 120_000 })
     // Keep track if the user accepted or declined the invite, so message isn't deleted after collector expiration.
-    let acceptedOrDeclined = false
+    let inviteResponded = false
     collector.on('collect', async (i) => {
       // Check if the user who clicked the button was the invited user
       if (i.user.id === data.invited.id) {
-        acceptedOrDeclined = true
+        inviteResponded = true
         if (i.customId === `accept-${data.game.toLowerCase()}-invite`) {
-          // Execute callback when starting game
+          // Reply to interaction to acknowledge it
+          await i.reply({ content: 'Invitation accepted!', ephemeral: true })
+          await delay(1000)
+          await i.deleteReply()
+          // Execute callback
           await startGame()
-        } else {
+        } else if (i.customId === `decline-${data.game.toLowerCase()}-invite`) {
+          // Delete invite message
           if (message instanceof Message) {
             await message.edit({ content: `<@${data.inviter.id}>, ${data.invited.displayName} declined your invite to play ${data.game}.`, embeds: [], components: [] })
             await delay(3000)
@@ -58,11 +63,13 @@ const sendInvite = async (invite: GameInvite, data: InviteData, message: Message
             await message.deleteReply()
           }
         }
+      } else {
+        await i.reply({ content: 'This invite is not for you!', ephemeral: true })
       }
     })
 
     collector.on('end', async () => {
-      if (!acceptedOrDeclined) {
+      if (!inviteResponded) {
         if (message instanceof Message) {
           await message.edit({ content: `<@${data.inviter.id}>, ${data.invited.displayName} didn't respond to the invite in time.`, embeds: [], components: [] })
           await delay(3000)

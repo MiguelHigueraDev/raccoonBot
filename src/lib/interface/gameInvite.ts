@@ -1,7 +1,7 @@
 import { type User, type ActionRowBuilder, type ButtonBuilder, type EmbedBuilder } from 'discord.js'
 
-// This interface is for the GameInvite components (embed)
-export interface GameInvite {
+// This interface is for the embed
+export interface InviteEmbed {
   embeds: EmbedBuilder[]
   components: Array<ActionRowBuilder<ButtonBuilder>>
 }
