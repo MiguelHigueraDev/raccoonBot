@@ -64,7 +64,7 @@ const sendInvite = async (invite: InviteEmbed, data: InviteData, message: Messag
           }
         }
       } else {
-        if (i.customId === `accept-${data.game.toLowerCase()}-invite`) {
+        if (i.customId === `accept-${data.game.toLowerCase()}-invite` || i.customId === `decline-${data.game.toLowerCase()}-invite`) {
           await i.reply({ content: 'This invite is not for you!', ephemeral: true })
         }
       }
