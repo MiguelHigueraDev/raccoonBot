@@ -1,9 +1,9 @@
 import { Command } from '@sapphire/framework'
-import { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, type User, type ChatInputCommandInteraction, ComponentType, type Message } from 'discord.js'
+import { type User, type ChatInputCommandInteraction, type Message } from 'discord.js'
 import Alerts from '../../../lib/alerts/alerts'
 import { addMinutes, getUnixTime } from 'date-fns'
-import { delay } from '../../../lib/misc/delay'
-import { type HangmanInvite } from '../../../lib/interface/hangmanInvite'
+import invitesManager from '../../../lib/games/invitesManager'
+import { type InviteData } from '../../../lib/interface/gameInvite'
 
 export class HangmanCommand extends Command {
   public constructor (context: Command.LoaderContext, options: Command.Options) {
@@ -45,7 +45,7 @@ export class HangmanCommand extends Command {
     const onlyLettersRegex = /^(?:[a-zA-Z]\s*){3,}$/
     const input = interaction.options.getString('word', true)
     if (!onlyLettersRegex.test(input)) {
-      return await Alerts.WARN(interaction, 'You can only enter letters for the word. (a-z)', true)
+      return await Alerts.WARN(interaction, 'You can only enter letters (a-z) and spaces for the word.', true)
     }
     const invited = interaction.options.getUser('player', true)
     if (invited.id === interaction.user.id) return await Alerts.WARN(interaction, 'You cannot play hangman with yourself!\n\nInvite another player!', true)
@@ -59,7 +59,8 @@ export class HangmanCommand extends Command {
 
     const twoMinutesInTheFuture = getUnixTime(addMinutes(Date.now(), 2))
     // Send invite to player
-    const invite = this.makeInvite(interaction.user.id, invited.displayName, twoMinutesInTheFuture)
+    const inviteData: InviteData = { inviter: interaction.user, invited, timestamp: twoMinutesInTheFuture, game: 'Hangman' }
+    const invite = invitesManager.makeInvite(inviteData)
     if (interaction.channel == null) return
     // Send a message to the player so interaction is replied. Delete it immediately.
     const preMessage = await interaction.reply({ content: 'Sending invite...' })
@@ -67,64 +68,13 @@ export class HangmanCommand extends Command {
 
     // Send a new message instead of editing the interaction to prevent cheating by seeing the command input.
     const message = await interaction.channel.send({ content: 'Sending invite...' })
-    await this.sendInvite(invite, message, invited, interaction.user, word)
+    await invitesManager.sendInvite(invite,
+      inviteData,
+      message,
+      async () => { await this.startHangmanGame(inviteData.invited, message, word) })
   }
 
-  private makeInvite (inviter: string, invited: string, timestamp: number) {
-    const hangmanEmbed = new EmbedBuilder()
-      .setColor('Blurple')
-      .setTitle('Hangman Invite')
-      .setDescription(`**${invited}**, **<@${inviter}>** has invited you to play hangman!\n\n**Accept invite?**\n\nInvite expires <t:${timestamp}:R>`)
-
-    const acceptButton = new ButtonBuilder()
-      .setCustomId('accept-hangman-invite')
-      .setLabel('Accept')
-      .setStyle(ButtonStyle.Success)
-
-    const declineButton = new ButtonBuilder()
-      .setCustomId('decline-hangman-invite')
-      .setLabel('Decline')
-      .setStyle(ButtonStyle.Danger)
-
-    const row = new ActionRowBuilder<ButtonBuilder>().addComponents(acceptButton, declineButton)
-    return { embeds: [hangmanEmbed], components: [row] }
-  }
-
-  private async sendInvite (invite: HangmanInvite, message: Message, invited: User, inviter: User, word: string) {
-    try {
-      const inviteMessage = await message.edit({ ...invite, content: '' })
-      const collector = inviteMessage.createMessageComponentCollector({ componentType: ComponentType.Button, time: 120_000 })
-
-      // Keep track if the user accepted or declined the invite, so message isn't deleted after collector expiration.
-      let acceptedOrDeclined = false
-      collector.on('collect', async (i) => {
-        // Check if the user who clicked the button was the invited user
-        if (i.user.id === invited.id) {
-          if (i.customId === 'accept-hangman-invite') {
-            acceptedOrDeclined = true
-            await this.startGame(invited, inviteMessage, word)
-          } else {
-            acceptedOrDeclined = true
-            await message.edit({ content: `<@${inviter.id}>, ${invited.displayName} declined your invite to play hangman.`, embeds: [], components: [] })
-            await delay(30000)
-            await message.delete()
-          }
-        }
-      })
-
-      collector.on('end', async () => {
-        if (!acceptedOrDeclined) {
-          await message.edit({ content: `<@${inviter.id}>, ${invited.displayName} didn't respond to the invite in time.`, embeds: [], components: [] })
-          await delay(30000)
-          await message.delete()
-        }
-      })
-    } catch (error) {
-      console.error(error)
-    }
-  }
-
-  private async startGame (invited: User, message: Message, word: string) {
+  private async startHangmanGame (invited: User, message: Message, word: string) {
     try {
       // Save current guild and channel to prevent multiple trivias in the same channel
       this.container.hangmanGames.push(`${message.guild?.id}:${message.channel?.id}`)
@@ -132,7 +82,7 @@ export class HangmanCommand extends Command {
       let damage = 0
       const attemptedLetters: string[] = []
       // Remove previous embeds and components and show message
-      await this.updateGameStatus(message, word, [], damage, this.GAME_STATUSES.GAME_START)
+      await this.updateHangmanGameStatus(message, word, [], damage, this.GAME_STATUSES.GAME_START)
       if (message.channel == null) return
 
       const collector = message.channel.createMessageCollector({ time: 900_000 })
@@ -156,17 +106,17 @@ export class HangmanCommand extends Command {
               const playerWon = this.checkIfPlayerWon(word, attemptedLetters)
               if (playerWon) {
                 collector.stop()
-                await this.updateGameStatus(message, word, attemptedLetters, damage, this.GAME_STATUSES.WON)
+                await this.updateHangmanGameStatus(message, word, attemptedLetters, damage, this.GAME_STATUSES.WON)
               } else {
-                await this.updateGameStatus(message, word, attemptedLetters, damage, this.GAME_STATUSES.CORRECT)
+                await this.updateHangmanGameStatus(message, word, attemptedLetters, damage, this.GAME_STATUSES.CORRECT)
               }
             } else {
               damage++
               if (damage === 5) {
                 collector.stop()
-                await this.updateGameStatus(message, word, attemptedLetters, damage, this.GAME_STATUSES.LOST)
+                await this.updateHangmanGameStatus(message, word, attemptedLetters, damage, this.GAME_STATUSES.LOST)
               } else {
-                await this.updateGameStatus(message, word, attemptedLetters, damage, this.GAME_STATUSES.INCORRECT)
+                await this.updateHangmanGameStatus(message, word, attemptedLetters, damage, this.GAME_STATUSES.INCORRECT)
               }
             }
           }
@@ -182,7 +132,7 @@ export class HangmanCommand extends Command {
     }
   }
 
-  private async updateGameStatus (message: Message, word: string, attemptedLetters: string[], damage: number, gameStatus: number) {
+  private async updateHangmanGameStatus (message: Message, word: string, attemptedLetters: string[], damage: number, gameStatus: number) {
     // Replace all letters that haven't been guessed yet with dashes but keep spaces intact
     const guessedWord = word
       .split('')
@@ -212,11 +162,10 @@ export class HangmanCommand extends Command {
 
     await message.edit({
       content: `
+# Hangman
+
+Enter a letter to guess!
 ${nextCharacter}
-**--------------**
-
-**HANGMAN**: Enter a letter to guess
-
 **${guessedWord}**
 
 ${guessString}
