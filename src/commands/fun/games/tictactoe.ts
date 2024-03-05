@@ -29,7 +29,7 @@ export class TicTacToeCommand extends Command {
             .setRequired(true)
         )
     , {
-      idHints: []
+      idHints: ['1214409088130088960']
     })
   }
 
