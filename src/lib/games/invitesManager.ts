@@ -49,6 +49,7 @@ const sendInvite = async (invite: InviteEmbed, data: InviteData, message: Messag
           await i.reply({ content: 'Invitation accepted!', ephemeral: true })
           await delay(1000)
           await i.deleteReply()
+          collector.stop()
           // Execute callback
           await startGame()
         } else if (i.customId === `decline-${data.game.toLowerCase()}-invite`) {
@@ -62,6 +63,7 @@ const sendInvite = async (invite: InviteEmbed, data: InviteData, message: Messag
             await delay(3000)
             await message.deleteReply()
           }
+          collector.stop()
         }
       } else {
         if (i.customId === `accept-${data.game.toLowerCase()}-invite` || i.customId === `decline-${data.game.toLowerCase()}-invite`) {
