@@ -5,7 +5,6 @@ import { addMinutes, getUnixTime } from 'date-fns'
 import invitesManager from '../../../lib/games/invitesManager'
 import { type InviteData } from '../../../lib/interface/gameInvite'
 import ticTacToeHumanController from '../../../lib/games/ticTacToeHumanController'
-import ticTacToeAiController from '../../../lib/games/ticTacToeAiController'
 
 export class TicTacToeCommand extends Command {
   public constructor (context: Command.LoaderContext, options: Command.Options) {
@@ -57,7 +56,7 @@ export class TicTacToeCommand extends Command {
       )
     } else {
       // If sent to the bot, start AI game (unimplemented yet)
-      await ticTacToeAiController.startGame(interaction)
+      // await ticTacToeAiController.startGame(interaction)
     }
   }
 }
