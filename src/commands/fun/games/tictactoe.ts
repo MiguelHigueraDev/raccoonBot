@@ -41,17 +41,22 @@ export class TicTacToeCommand extends Command {
     }
 
     // Check if player is themselves
-    // if (invited.id === interaction.user.id) return await Alerts.WARN(interaction, 'You can\'t play tic-tac-toe with yourself!\n\nInvite another player (or me)!', true)
+    if (invited.id === interaction.user.id) return await Alerts.WARN(interaction, 'You can\'t play tic-tac-toe with yourself!\n\nInvite another player (or me)!', true)
 
+    if (!invited.bot) {
     // If invited player is a human player, send invite
-    const twoMinutesInTheFuture = getUnixTime(addMinutes(Date.now(), 2))
-    const inviteData: InviteData = { inviter: interaction.user, invited, timestamp: twoMinutesInTheFuture, game: 'Tic-Tac-Toe' }
-    const invite = invitesManager.makeInvite(inviteData)
-    await invitesManager.sendInvite(invite,
-      inviteData,
-      interaction,
-      async () => { await this.startHumanTicTacToeGame(inviteData.invited, interaction) }
-    )
+      const twoMinutesInTheFuture = getUnixTime(addMinutes(Date.now(), 2))
+      const inviteData: InviteData = { inviter: interaction.user, invited, timestamp: twoMinutesInTheFuture, game: 'Tic-Tac-Toe' }
+      const inviteEmbed = invitesManager.makeInvite(inviteData)
+      await invitesManager.sendInvite(inviteEmbed,
+        inviteData,
+        interaction,
+        async () => { await this.startHumanTicTacToeGame(inviteData.invited, interaction) }
+      )
+    } else {
+      // If sent to the bot, start AI game
+      await this.startAITicTacToeGame(interaction)
+    }
   }
 
   private async startHumanTicTacToeGame (invited: User, interaction: ChatInputCommandInteraction) {
@@ -114,6 +119,10 @@ export class TicTacToeCommand extends Command {
         await i.reply({ content: 'It\'s not your turn!', ephemeral: true })
       }
     })
+  }
+
+  private async startAITicTacToeGame (interaction: ChatInputCommandInteraction) {
+    await interaction.reply({ content: 'Sadly, AI hasn\'t been implemented yet. Stay tuned for the release!', ephemeral: true })
   }
 
   private nextTurn (game: TicTacToeGame) {
