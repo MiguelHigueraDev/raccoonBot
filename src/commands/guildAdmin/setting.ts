@@ -3,6 +3,7 @@ import { type ChatInputCommandInteraction } from 'discord.js'
 import Alerts from '../../lib/alerts/alerts'
 import { checkIfUserIsGuildAdmin } from '../../lib/permissions/checkPermissions'
 import { updateMainChannel } from '../../subcommands/setting/mainchannel'
+import { updateTtsChannel } from '../../subcommands/setting/ttschannel'
 
 export class SettingCommand extends Command {
   public constructor (context: Command.LoaderContext, options: Command.Options) {
@@ -24,6 +25,9 @@ export class SettingCommand extends Command {
     const subcommand = interaction.options.getSubcommand()
     if (subcommand === 'mainchannel') {
       return await updateMainChannel(interaction)
+    }
+    if (subcommand === 'ttschannel') {
+      return await updateTtsChannel(interaction)
     }
   }
 }
