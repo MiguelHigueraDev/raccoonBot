@@ -44,9 +44,9 @@ function loadSchedules (): void {
 }
 
 // Register option subcommands
-/* registerSubcommands()
+registerSubcommands()
   .then(() => { console.log('Subcommands updated.') })
-  .catch((error) => { console.log(error) }) */
+  .catch((error) => { console.log(error) })
 
 client.login(token)
   .then(() => { loadSchedules() })
