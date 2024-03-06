@@ -33,20 +33,20 @@ declare module '@sapphire/pieces' {
   }
 }
 
-container.trivias = []
-container.hangmanGames = []
-container.db = prisma
-
 // Schedules
 function loadSchedules (): void {
   birthdaySchedule()
   updateGuildUsers()
 }
 
+container.trivias = []
+container.hangmanGames = []
+container.db = prisma
+
 // Register option subcommands
-registerSubcommands()
+/* registerSubcommands()
   .then(() => { console.log('Subcommands updated.') })
-  .catch((error) => { console.log(error) })
+  .catch((error) => { console.log(error) }) */
 
 client.login(token)
   .then(() => { loadSchedules() })

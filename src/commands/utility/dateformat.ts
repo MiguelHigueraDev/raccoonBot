@@ -81,7 +81,7 @@ export class DateFormatCommand extends Command {
             .setMinValue(0)
             .setMaxValue(59))
     , {
-      idHints: ['1214763690956562502']
+      idHints: ['1214763690956562502, 1214768166274859119']
     })
   }
 
