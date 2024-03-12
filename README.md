@@ -1,4 +1,4 @@
-# RaccoonBot-ts
+# RaccoonBot
 
 A multi-purpose discord bot written using TypeScript + [Sapphire Framework](https://www.sapphirejs.dev/) + [Prisma](https://github.com/prisma/prisma).
 
