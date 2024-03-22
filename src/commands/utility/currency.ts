@@ -30,6 +30,8 @@ export class CurrencyCommand extends Command {
               .setName('amount')
               .setDescription('The amount to convert')
               .setRequired(true)
+              .setMinValue(1)
+              .setMaxValue(100_000_000)
           )
           .addStringOption((option) =>
             option
@@ -60,13 +62,13 @@ export class CurrencyCommand extends Command {
     // Fetch data from currency API
     const API_URL = 'https://api.freecurrencyapi.com/v1/latest'
     const response = await fetch(`${API_URL}?apikey=${CURR_API_KEY}&base_currency=${from}&currencies=${to}`)
+    console.log(response)
     if (!response.ok) return await message.edit({ content: StringAlerts.ERROR('An error occurred while fetching data from the API.'), embeds: [] })
 
     const json = await response.json()
     if (json.data == null) return await message.edit({ content: StringAlerts.ERROR('An error occurred while fetching data from the API.'), embeds: [] })
 
     // Data is valid
-    console.log(json.data)
     const finalAmount = amount * json.data[to]
     const embed = new EmbedBuilder().setColor('Blurple')
       .setTitle(`${amount} ${from} = ${finalAmount.toFixed(2)} ${to}`)
