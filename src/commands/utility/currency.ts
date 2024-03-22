@@ -47,7 +47,7 @@ export class CurrencyCommand extends Command {
               .addChoices(...CURRENCY_LIST)
           ),
       {
-        idHints: ['1220797768126304277']
+        idHints: ['1220797768126304277', '1220799837432184872']
       }
     )
   }
