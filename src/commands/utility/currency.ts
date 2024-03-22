@@ -59,6 +59,8 @@ export class CurrencyCommand extends Command {
     const from = interaction.options.getString('from', true)
     const to = interaction.options.getString('to', true)
 
+    if (from === to) return await message.edit({ content: StringAlerts.ERROR('You cannot convert from and to the same currency.'), embeds: [] })
+
     // Fetch data from currency API
     const API_URL = 'https://api.freecurrencyapi.com/v1/latest'
     const response = await fetch(`${API_URL}?apikey=${CURR_API_KEY}&base_currency=${from}&currencies=${to}`)
