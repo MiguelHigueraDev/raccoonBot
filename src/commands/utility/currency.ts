@@ -64,7 +64,6 @@ export class CurrencyCommand extends Command {
     // Fetch data from currency API
     const API_URL = 'https://api.freecurrencyapi.com/v1/latest'
     const response = await fetch(`${API_URL}?apikey=${CURR_API_KEY}&base_currency=${from}&currencies=${to}`)
-    console.log(response)
     if (!response.ok) return await message.edit({ content: StringAlerts.ERROR('An error occurred while fetching data from the API.'), embeds: [] })
 
     const json = await response.json()
