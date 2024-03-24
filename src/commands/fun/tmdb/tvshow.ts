@@ -1,10 +1,8 @@
 import { Command } from '@sapphire/framework'
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, type ChatInputCommandInteraction } from 'discord.js'
-import { ShowLoadingMessage } from '../../../lib/api/loadingMessage'
 import { config } from 'dotenv'
 import { type Keyword, type Cast, type CastResult, type TvShow, type TvShowResult, type TvShowResults, type ShowKeywordsResult } from '../../../lib/interface/tmdb'
 import StringAlerts from '../../../lib/alerts/stringAlerts'
-import checkMessageStillExists from '../../../lib/misc/checkMessageStillExists'
 config()
 const TMDB_KEY = process.env.TMDB_KEY
 
@@ -35,14 +33,13 @@ export class TvShowCommand extends Command {
 
   public async chatInputRun (interaction: ChatInputCommandInteraction) {
     const tvShow = interaction.options.getString('tvshow', true)
-    const loadingMessage = await ShowLoadingMessage(interaction)
+    await interaction.deferReply()
     try {
       const partialShowQuery = await fetch(`https://api.themoviedb.org/3/search/tv?api_key=${TMDB_KEY}&query=${tvShow}&include_adult=false`)
       const partialShowQueryData: TvShowResults = await partialShowQuery.json()
       // Check if there are any results
       if (partialShowQueryData.results == null || partialShowQueryData.results.length < 1) {
-        if (!checkMessageStillExists(interaction, loadingMessage.id)) return
-        return await loadingMessage.edit({
+        return await interaction.editReply({
           content: StringAlerts.WARN('Show not found.'),
           embeds: []
         })
@@ -90,13 +87,10 @@ export class TvShowCommand extends Command {
       const embed = this.makeEmbed(finalTitle, poster, numberOfSeasons, numberOfEpisodes, status, firstAirYear, lastAirYear, genreString, showSynopsis, castString, keywordsString)
       const buttonRow = this.makeWatchButton(id)
 
-      // Check if message was deleted to prevent crash before editing loading
-      if (!checkMessageStillExists(interaction, loadingMessage.id)) return
-      return await loadingMessage.edit({ embeds: [embed], components: [buttonRow] })
+      return await interaction.editReply({ embeds: [embed], components: [buttonRow] })
     } catch (error) {
       console.error(error)
-      if (!checkMessageStillExists(interaction, loadingMessage.id)) return
-      return await loadingMessage.edit({
+      return await interaction.editReply({
         content: StringAlerts.ERROR('Error fetching data about the show.'),
         embeds: []
       })

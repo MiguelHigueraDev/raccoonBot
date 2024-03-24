@@ -2,9 +2,7 @@ import { Command } from '@sapphire/framework'
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, type ChatInputCommandInteraction } from 'discord.js'
 import { config } from 'dotenv'
 import { type CastResult, type Cast, type Movie, type MovieResult, type MovieResults, type KeywordsResult, type Keyword } from '../../../lib/interface/tmdb'
-import { ShowLoadingMessage } from '../../../lib/api/loadingMessage'
 import StringAlerts from '../../../lib/alerts/stringAlerts'
-import checkMessageStillExists from '../../../lib/misc/checkMessageStillExists'
 config()
 const TMDB_KEY = process.env.TMDB_KEY
 
@@ -35,14 +33,13 @@ export class MovieCommand extends Command {
 
   public async chatInputRun (interaction: ChatInputCommandInteraction) {
     const movie = interaction.options.getString('movie', true)
-    const loadingMessage = await ShowLoadingMessage(interaction)
+    await interaction.deferReply()
     try {
       const partialMovieQuery = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=${TMDB_KEY}&query=${movie}&include_adult=false`)
       const partialMovieQueryData: MovieResults = await partialMovieQuery.json()
 
       if (partialMovieQueryData.results == null || partialMovieQueryData.results.length < 1) {
-        if (!checkMessageStillExists(interaction, loadingMessage.id)) return
-        return await loadingMessage.edit({
+        return await interaction.editReply({
           content: StringAlerts.WARN('Movie not found.'),
           embeds: []
         })
@@ -86,12 +83,10 @@ export class MovieCommand extends Command {
       const buttonRow = this.makeWatchButton(id)
 
       // Check if message was deleted to prevent crash before editing loading
-      if (!checkMessageStillExists(interaction, loadingMessage.id)) return
-      return await loadingMessage.edit({ embeds: [embed], components: [buttonRow] })
+      return await interaction.editReply({ embeds: [embed], components: [buttonRow] })
     } catch (error) {
       console.error(error)
-      if (!checkMessageStillExists(interaction, loadingMessage.id)) return
-      return await loadingMessage.edit({
+      return await interaction.editReply({
         content: StringAlerts.ERROR('Error fetching data about the movie.'),
         embeds: []
       })
