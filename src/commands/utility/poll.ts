@@ -49,7 +49,7 @@ export class PollCommand extends Command {
 
     const optionsArray = options.split(',').map((q) => q.trim())
 
-    const validation = this.validateData(optionsArray, question, interaction)
+    const validation = this.validateData(optionsArray, question)
     if (validation !== true) {
       return await Alerts.ERROR(interaction, validation, true)
     }
@@ -79,18 +79,18 @@ export class PollCommand extends Command {
     return await interaction.reply({ embeds: [pollEmbed], components: pollButtons })
   }
 
-  private readonly validateData = (optionsArray: string[], question: string, interaction: ChatInputCommandInteraction): string | true => {
-    if (optionsArray.length < 2 || optionsArray.length > 8) {
+  private readonly validateData = (options: string[], question: string): string | true => {
+    if (options.length < 2 || options.length > 8) {
       return 'Please provide between 2 and 8 options separated by commas.'
     }
 
     // Check if there are duplicate options
-    if (new Set(optionsArray).size !== optionsArray.length) {
+    if (new Set(options).size !== options.length) {
       return 'Cannot enter duplicate options. Please try again.'
     }
 
     // Check all the options are below 100 characters
-    for (const option of optionsArray) {
+    for (const option of options) {
       if (option.length > 100) {
         return 'Each option must be below 100 characters. Please try again.'
       }
