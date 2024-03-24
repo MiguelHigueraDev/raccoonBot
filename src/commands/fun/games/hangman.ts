@@ -44,6 +44,8 @@ export class HangmanCommand extends Command {
     // At least 3 letters + spaces
     const onlyLettersRegex = /^(?:[a-zA-Z]\s*){3,}$/
     const input = interaction.options.getString('word', true)
+
+    // Basic checks
     if (!onlyLettersRegex.test(input)) {
       return await Alerts.WARN(interaction, 'You can only enter letters (a-z) and spaces for the word.', true)
     }
@@ -51,18 +53,14 @@ export class HangmanCommand extends Command {
     if (invited.id === interaction.user.id) return await Alerts.WARN(interaction, 'You cannot play hangman with yourself!\n\nInvite another player!', true)
     if (invited.bot) return await Alerts.WARN(interaction, 'You can\'t play hangman with a bot!\n\nInvite a human player!', true)
 
-    const word = input.toLowerCase()
-    // This additional check is just for safety, but it shouldn't be necessary
-    if (word.length > 15 || word.length < 3) {
-      return await Alerts.WARN(interaction, 'The word must be between 3 and 15 characters!', true)
-    }
-
-    const twoMinutesInTheFuture = getUnixTime(addMinutes(Date.now(), 2))
     // Send invite to player
+    const word = input.toLowerCase()
+    const twoMinutesInTheFuture = getUnixTime(addMinutes(Date.now(), 2))
     const inviteData: InviteData = { inviter: interaction.user, invited, timestamp: twoMinutesInTheFuture, game: 'Hangman' }
     const invite = invitesManager.makeInvite(inviteData)
     if (interaction.channel == null) return
-    // Send a message to the player so interaction is replied. Delete it immediately.
+
+    // Send a message to the player so interaction is acknowledged. Delete it immediately.
     const preMessage = await interaction.reply({ content: 'Sending invite...' })
     await preMessage.delete()
 
@@ -102,7 +100,7 @@ export class HangmanCommand extends Command {
           } else {
             attemptedLetters.push(guess)
             if (word.includes(guess)) {
-            // Check if player guessed the word
+            // Check if player guessed the word, if guessed stop the collector.
               const playerWon = this.checkIfPlayerWon(word, attemptedLetters)
               if (playerWon) {
                 collector.stop()

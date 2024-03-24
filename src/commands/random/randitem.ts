@@ -4,7 +4,6 @@ import Alerts from '../../lib/alerts/alerts'
 import { shuffleArray } from '../../lib/random/shuffleUtils'
 import { splitString } from '../../lib/arrays/arrayUtils'
 import { checkChannelPermissions } from '../../lib/permissions/checkPermissions'
-import checkMessageStillExists from '../../lib/misc/checkMessageStillExists'
 
 export class RandItemCommand extends Command {
   public constructor (context: Command.LoaderContext, options: Command.Options) {
@@ -40,23 +39,23 @@ export class RandItemCommand extends Command {
         return await Alerts.ERROR(interaction, 'I can\'t send messages to this channel! Please try another one.', true)
       }
     }
-
     const list = interaction.options.getString('list', true)
     const array = splitString(list)
 
     if (array.length < 2) return await Alerts.WARN(interaction, 'Please provide at least two items separated by commas.', true)
 
-    const reply = await interaction.reply({ content: 'Shuffling...', fetchReply: true })
-    // Add extra shuffles in case there are 3 items or less
-    const shuffles = (array.length <= 3) ? array.length * 2 : array.length
-    for (let i = 0; i < shuffles; i++) {
-      // Check if message was deleted to prevent crash
-      if (!checkMessageStillExists(interaction, reply.id)) return
-      await reply.edit({ content: shuffleArray(array)[0] })
-      await new Promise(resolve => setTimeout(resolve, 700))
+    try {
+      const reply = await interaction.reply({ content: 'Shuffling...', fetchReply: true })
+      // Add extra shuffles in case there are 3 items or less
+      const shuffles = (array.length <= 3) ? array.length * 2 : array.length
+      for (let i = 0; i < shuffles; i++) {
+        await reply.edit({ content: shuffleArray(array)[0] })
+        await new Promise(resolve => setTimeout(resolve, 700))
+      }
+      const finalRoll: string = shuffleArray(array)[0]
+      return await reply.edit({ content: `**${finalRoll}**` })
+    } catch (error) {
+      console.error('[randitem] Error:', error)
     }
-    const finalRoll: string = shuffleArray(array)[0]
-    if (!checkMessageStillExists(interaction, reply.id)) return
-    return await reply.edit({ content: `**${finalRoll}**` })
   }
 }

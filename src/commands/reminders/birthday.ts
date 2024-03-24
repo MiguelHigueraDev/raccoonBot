@@ -48,11 +48,12 @@ export class BirthdayCommand extends Command {
       }
       if (birthdate === null) {
         // Only display birthday
-        const birthday = await this.container.db.user.findUnique({ where: { id: userId }, select: { birthday: true } })
-        if (birthday?.birthday == null) {
+        const user = await this.container.db.user.findUnique({ where: { id: userId }, select: { birthday: true } })
+        if (user.birthday == null) {
           return await Alerts.INFO(interaction, 'Your birthday isn\'t saved. Save it using this command and providing a date in yyyy-mm-dd format.', true)
         } else {
-          return await Alerts.INFO(interaction, `Your birthday is: ${time(Math.floor(addHours(birthday.birthday.getTime(), 8) / 1000), 'D')}`, true)
+          const storedDate = Math.floor(addHours(user.birthday.getTime(), 8) / 1000)
+          return await Alerts.INFO(interaction, `Your birthday is: ${time(storedDate, 'D')}`, true)
         }
       }
 
@@ -111,7 +112,6 @@ export class BirthdayCommand extends Command {
         return await interaction.editReply({ content: 'Confirmation not received within 30 seconds, canceling.', components: [] })
       }
     } catch (error) {
-      console.error(error)
       return await Alerts.ERROR(interaction, 'An error occurred while saving your birthday.', true)
     }
   }

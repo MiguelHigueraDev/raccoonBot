@@ -4,7 +4,6 @@ import { shuffleArray } from '../../lib/random/shuffleUtils'
 import { splitString } from '../../lib/arrays/arrayUtils'
 import { checkChannelPermissions } from '../../lib/permissions/checkPermissions'
 import Alerts from '../../lib/alerts/alerts'
-import checkMessageStillExists from '../../lib/misc/checkMessageStillExists'
 
 export class ShuffleCommand extends Command {
   public constructor (context: Command.LoaderContext, options: Command.Options) {
@@ -43,17 +42,17 @@ export class ShuffleCommand extends Command {
     const list = interaction.options.getString('list', true)
     const array = splitString(list)
     const reply = await interaction.reply({ content: '**Shuffling list...**', fetchReply: true })
+    try {
     // Add extra shuffles in case there are 3 items or less
-    const shuffles = (array.length <= 3) ? array.length * 2 : array.length
-    for (let i = 0; i < shuffles; i++) {
-      // Check if message was deleted to prevent crash
-      if (!checkMessageStillExists(interaction, reply.id)) return
-
-      await reply.edit({ content: shuffleArray(array).join(', ') })
-      await new Promise(resolve => setTimeout(resolve, 700))
+      const shuffles = (array.length <= 3) ? array.length * 2 : array.length
+      for (let i = 0; i < shuffles; i++) {
+        await reply.edit({ content: shuffleArray(array).join(', ') })
+        await new Promise(resolve => setTimeout(resolve, 700))
+      }
+      const finalRoll: string = shuffleArray(array).join(', ')
+      return await reply.edit({ content: `**${finalRoll}**` })
+    } catch (error) {
+      console.error('[shuffle] Error:', error)
     }
-    const finalRoll: string = shuffleArray(array).join(', ')
-    if (!checkMessageStillExists(interaction, reply.id)) return
-    return await reply.edit({ content: `**${finalRoll}**` })
   }
 }

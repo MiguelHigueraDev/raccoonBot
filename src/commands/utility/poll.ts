@@ -48,23 +48,10 @@ export class PollCommand extends Command {
     const expiration = interaction.options.getString('expiration') ?? '1d'
 
     const optionsArray = options.split(',').map((q) => q.trim())
-    if (optionsArray.length < 2 || optionsArray.length > 8) {
-      return await Alerts.WARN(interaction, 'Please provide between 2 and 8 options separated by commas.', true)
-    }
 
-    // Check if there are duplicate options
-    if (new Set(optionsArray).size !== optionsArray.length) {
-      return await Alerts.WARN(interaction, 'Cannot enter duplicate options. Please try again.', true)
-    }
-
-    // Check all the options are below 100 characters
-    for (const option of optionsArray) {
-      if (option.length > 100) {
-        return await Alerts.WARN(interaction, 'Each option must be below 100 characters. Please try again.', true)
-      }
-    }
-    if (question.length > 150) {
-      return await Alerts.WARN(interaction, 'The question must be below 150 characters. Please try again.', true)
+    const validation = this.validateData(optionsArray, question, interaction)
+    if (validation !== true) {
+      return await Alerts.ERROR(interaction, validation, true)
     }
 
     // Get expiration date
@@ -73,7 +60,7 @@ export class PollCommand extends Command {
 
     const pollInsert = await pollHandler.createPoll(interaction.user.id, optionsArray, question, expirationDate)
     if (pollInsert === false) {
-      return await Alerts.WARN(interaction, 'Error creating poll. Please try again.', true)
+      return await Alerts.WARN(interaction, 'Error creating poll in the database. Please try again.', true)
     }
 
     const pollEmbed = new EmbedBuilder()
@@ -90,6 +77,29 @@ export class PollCommand extends Command {
     const pollButtons = this.createButtons(optionsArray.length)
 
     return await interaction.reply({ embeds: [pollEmbed], components: pollButtons })
+  }
+
+  private readonly validateData = (optionsArray: string[], question: string, interaction: ChatInputCommandInteraction): string | true => {
+    if (optionsArray.length < 2 || optionsArray.length > 8) {
+      return 'Please provide between 2 and 8 options separated by commas.'
+    }
+
+    // Check if there are duplicate options
+    if (new Set(optionsArray).size !== optionsArray.length) {
+      return 'Cannot enter duplicate options. Please try again.'
+    }
+
+    // Check all the options are below 100 characters
+    for (const option of optionsArray) {
+      if (option.length > 100) {
+        return 'Each option must be below 100 characters. Please try again.'
+      }
+    }
+    if (question.length > 150) {
+      return 'The question must be below 150 characters. Please try again.'
+    }
+
+    return true
   }
 
   private readonly getDate = (expiration: string): Date => {
