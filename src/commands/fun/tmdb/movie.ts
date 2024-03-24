@@ -82,7 +82,6 @@ export class MovieCommand extends Command {
       const embed = this.makeEmbed(finalTitle, posterUrl, releaseYear, genreString, movieSynopsis, castString, keywordsString)
       const buttonRow = this.makeWatchButton(id)
 
-      // Check if message was deleted to prevent crash before editing loading
       return await interaction.editReply({ embeds: [embed], components: [buttonRow] })
     } catch (error) {
       console.error(error)
