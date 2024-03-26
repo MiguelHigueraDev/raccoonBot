@@ -175,53 +175,17 @@ ${guessString}
 
   private getEmojiCharacter (damage: number): string {
     if (damage === 0) {
-      return `
-:green_square:
-:green_square:
-:green_square:
-:green_square:
-:green_square:
-      `
+      return ':green_square:\n:green_square:\n:green_square:\n:green_square:\n:green_square:'
     } else if (damage === 1) {
-      return `
-:tophat:
-:green_square:
-:green_square:
-:green_square:
-:green_square:
-      `
+      return ':tophat:\n:green_square:\n:green_square:\n:green_square:\n:green_square:'
     } else if (damage === 2) {
-      return `
-:tophat:
-:disguised_face:
-:green_square:
-:green_square:
-:green_square:
-      `
+      return ':tophat:\n:disguised_face:\n:green_square:\n:green_square:\n:green_square:'
     } else if (damage === 3) {
-      return `
-:tophat:
-:disguised_face:
-:shirt:
-:green_square:
-:green_square:
-      `
+      return ':tophat:\n:disguised_face:\n:shirt:\n:green_square:\n:green_square:'
     } else if (damage === 4) {
-      return `
-:tophat:
-:disguised_face:
-:shirt:
-:shorts:
-:green_square:
-      `
+      return ':tophat:\n:disguised_face:\n:shirt:\n:shorts:\n:green_square:'
     } else {
-      return `
-:tophat:
-:disguised_face:
-:shirt:
-:shorts:
-:athletic_shoe:
-      `
+      return ':tophat:\n:disguised_face:\n:shirt:\n:shorts:\n:athletic_shoe:'
     }
   }
 
