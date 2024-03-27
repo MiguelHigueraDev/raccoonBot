@@ -78,9 +78,10 @@ const getPollEmbed = async (pollId: number, question: string, total: number, vot
     const emoji = emojiMap[i + 1]
     const percentage = Math.round((Number(votes[i].voteCount) / Number(total)) * 100)
     const percentageBar = getPercentageBar(percentage)
+    const voteString = Number(votes[i].voteCount) === 1 ? 'vote' : 'votes'
     pollEmbed.addFields({
       name: `${emoji} ${votes[i].optionText}`,
-      value: `${percentageBar} ${percentage}% (${Number(votes[i].voteCount)} votes)`
+      value: `${percentageBar} ${percentage}% (${Number(votes[i].voteCount)} ${voteString})`
     })
   }
   pollEmbed.addFields({ name: `Total votes: ${Number(total)}`, value: `Expires <t:${expirationDateUnix}:R>` })
