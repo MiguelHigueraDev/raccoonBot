@@ -5,6 +5,7 @@ import { scheduleJob } from 'node-schedule'
 import settingsHandler from '../lib/database/settingsHandler'
 import { Settings } from '../constants/bot-config/settings'
 import { checkChannelPermissions } from '../lib/permissions/checkPermissions'
+import { EmbedBuilder, type TextBasedChannel } from 'discord.js'
 
 const birthdaySchedule = () => {
   scheduleJob('0 9 * * *', async () => {
@@ -44,7 +45,7 @@ const birthdaySchedule = () => {
 
       if (currentDay === day && currentMonth === month) {
         const sent = await sendBirthdayMessage(user.guildId, user.userId)
-        if (sent === false) console.log('Error sending birthday message to ' + user.userId + ' in guild ' + user.guildId)
+        if (!sent) console.log('Error sending birthday message to ' + user.userId + ' in guild ' + user.guildId)
       }
     }
   })
@@ -60,7 +61,7 @@ const sendBirthdayMessage = async (guildId: string, userId: string) => {
       const channel = container.client.channels.cache.get(mainChannel)
       if (channel != null && channel.isTextBased()) {
         if (await checkChannelPermissions(guildId, container.client.user.id, channel.id)) {
-          return await channel.send(`Today is **<@${userId}>**'s birthday! Happy birthday! :tada:`)
+          await sendBirthdayEmbed(channel, userId)
         }
       }
     }
@@ -72,7 +73,7 @@ const sendBirthdayMessage = async (guildId: string, userId: string) => {
       if (channel == null) continue
       if (channel.isTextBased()) {
         if (await checkChannelPermissions(guildId, container.client.user.id, channel.id)) {
-          return await channel.send(`Today is <@${userId}>'s birthday! **Happy birthday!** :tada:`)
+          await sendBirthdayEmbed(channel, userId)
         }
       }
     }
@@ -81,6 +82,11 @@ const sendBirthdayMessage = async (guildId: string, userId: string) => {
     console.error(error)
     return false
   }
+}
+
+const sendBirthdayEmbed = async (channel: TextBasedChannel, userId: string) => {
+  const embed = new EmbedBuilder().setTitle("It's a special day!").setDescription(`Today we celebrate <@${userId}>'s birthday! :tada: **Happy birthday!**`).setColor('Blurple')
+  await channel.send({ embeds: [embed] })
 }
 
 interface ElegibleUsers {
