@@ -59,12 +59,15 @@ export const getPreferenceEmbed = async (guildId: string, userId: string, prefer
     const isPreferenceEnabled = queryPreference?.enabled
 
     const { name, description } = preference
+    const guildImage = await container.client.guilds.fetch(guildId).then((guild) => guild.iconURL())
+    const guildName = await container.client.guilds.fetch(guildId).then((guild) => guild.name)
 
     const embed = new EmbedBuilder()
       .setColor('Blurple')
-      .setAuthor({ name: 'Your preferences' })
+      .setAuthor({ name: `Your preferences for ${guildName}` })
       .setTitle(name)
       .setDescription(description)
+      .setImage(guildImage)
       .setFooter({ text: 'Preference ' + preferenceIndex + '/' + pageCount })
 
     const prevButton = new ButtonBuilder().setCustomId('prevPreference').setLabel('<<').setStyle(ButtonStyle.Secondary).setDisabled(preferenceIndex === 1)
