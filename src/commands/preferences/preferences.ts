@@ -67,7 +67,7 @@ export const getPreferenceEmbed = async (guildId: string, userId: string, prefer
       .setAuthor({ name: `Your preferences for ${guildName}` })
       .setTitle(name)
       .setDescription(description)
-      .setImage(guildImage)
+      .setThumbnail(guildImage)
       .setFooter({ text: 'Preference ' + preferenceIndex + '/' + pageCount })
 
     const prevButton = new ButtonBuilder().setCustomId('prevPreference').setLabel('<<').setStyle(ButtonStyle.Secondary).setDisabled(preferenceIndex === 1)
