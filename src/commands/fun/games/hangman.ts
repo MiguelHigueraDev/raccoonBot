@@ -5,6 +5,8 @@ import { addMinutes, getUnixTime } from 'date-fns'
 import invitesManager from '../../../lib/games/invitesManager'
 import { type InviteData } from '../../../lib/interface/gameInvite'
 
+const MAX_DAMAGE = 5
+
 export class HangmanCommand extends Command {
   public constructor (context: Command.LoaderContext, options: Command.Options) {
     super(context, {
@@ -110,7 +112,7 @@ export class HangmanCommand extends Command {
               }
             } else {
               damage++
-              if (damage === 5) {
+              if (damage === MAX_DAMAGE) {
                 collector.stop()
                 await this.updateHangmanGameStatus(message, word, attemptedLetters, damage, this.GAME_STATUSES.LOST)
               } else {
