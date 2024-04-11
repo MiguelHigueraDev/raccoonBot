@@ -124,7 +124,7 @@ export class HangmanCommand extends Command {
       })
 
       collector.on('end', () => {
-      // Remove hangman game so another one can be played in the same channel
+        // Remove hangman game so another one can be played in the same channel
         this.container.hangmanGames = this.container.hangmanGames.filter((id) => id !== `${message.guild?.id}:${message.channel?.id}`)
       })
     } catch (error) {

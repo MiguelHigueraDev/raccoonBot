@@ -9,10 +9,10 @@
  * - The randomness is achieved through the use of the `Math.random()` function in the Fisher-Yates algorithm.
 */
 
-export const shuffleArray = (array: any[] = []): any[] => {
+export function shuffleArray<T> (array: T[] = []): T[] {
   for (let i: number = array.length - 1; i > 0; i--) {
     const j: number = Math.floor(Math.random() * (i + 1))
-    const temp: string = array[i]
+    const temp: T = array[i]
     array[i] = array[j]
     array[j] = temp
   }
