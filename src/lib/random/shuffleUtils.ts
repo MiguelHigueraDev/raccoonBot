@@ -1,8 +1,8 @@
 /**
  * Shuffles the elements of a given array in a random order using the Fisher-Yates (Knuth) shuffle algorithm.
  *
- * @param {string[]} [array=[]] - An array that you want to shuffle. Default value is an empty array.
- * @returns {string[]} A new array containing the elements of the input array shuffled in a random order.
+ * @param {T[]} [array=[]] - An array that you want to shuffle. Default value is an empty array.
+ * @returns {T[]} A new array containing the elements of the input array shuffled in a random order.
  *
  * @remarks
  * - The function does not modify the original array; instead, it returns a new array with the shuffled elements.
