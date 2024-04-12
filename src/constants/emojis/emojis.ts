@@ -5,6 +5,17 @@ export const EMOJIS = {
   loading: '<a:loading:1205300536396484659>'
 }
 
+export const BEAT_SABER_EMOJIS = {
+  error: '<:error:1228480654996537387>',
+  nps: '<:nps:1228480656447897610>',
+  njs: '<:njs:1228480658003988520>',
+  warn: '<:warn:1228480658788319285>',
+  notes: '<bsnotes:1228480660621230130>',
+  bombs: '<:bombs:1228480661900365944>',
+  walls: '<:walls:1228480662982623263>',
+  lights: '<:lights:1228480664815272089>'
+}
+
 export const EMOJI_PERCENTAGES = {
   100: `${EMOJIS.fullBar}${EMOJIS.fullBar}${EMOJIS.fullBar}${EMOJIS.fullBar}${EMOJIS.fullBar}${EMOJIS.fullBar}${EMOJIS.fullBar}${EMOJIS.fullBar}${EMOJIS.fullBar}${EMOJIS.fullBar}`,
   95: `${EMOJIS.fullBar}${EMOJIS.fullBar}${EMOJIS.fullBar}${EMOJIS.fullBar}${EMOJIS.fullBar}${EMOJIS.fullBar}${EMOJIS.fullBar}${EMOJIS.fullBar}${EMOJIS.fullBar}${EMOJIS.halfBar}`,
