@@ -10,7 +10,7 @@ export const BEAT_SABER_EMOJIS = {
   nps: '<:nps:1228480656447897610>',
   njs: '<:njs:1228480658003988520>',
   warn: '<:warn:1228480658788319285>',
-  notes: '<bsnotes:1228480660621230130>',
+  notes: '<:bsnotes:1228480660621230130>',
   bombs: '<:bombs:1228480661900365944>',
   walls: '<:walls:1228480662982623263>',
   lights: '<:lights:1228480664815272089>'
