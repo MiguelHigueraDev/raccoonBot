@@ -25,9 +25,8 @@ export class RandTeamsCommand extends Command {
             .setName('list')
             .setDescription('Comma-separated list of people to shuffle.')
             .setRequired(true)
-        ), {
-      idHints: ['1200846686176678059', '1203384453108473896']
-    })
+        )
+    )
   }
 
   public async chatInputRun (interaction: ChatInputCommandInteraction): Promise<InteractionResponse<boolean>> {

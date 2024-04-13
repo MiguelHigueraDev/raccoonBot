@@ -37,9 +37,7 @@ export class PollCommand extends Command {
             .setName('expiration')
             .setDescription('(OPTIONAL) When the poll should expire. Default: in 1 day.')
             .setRequired(false)
-            .addChoices({ name: 'in 30 minutes', value: '30m' }, { name: 'in 4 hours', value: '4h' }, { name: 'in 8 hours', value: '8h' }, { name: 'in 1 day', value: '1d' }, { name: 'in 3 days', value: '3d' }, { name: 'in 1 week', value: '7d' })), {
-      idHints: ['1203426607352512513', '1203860721247719444']
-    })
+            .addChoices({ name: 'in 30 minutes', value: '30m' }, { name: 'in 4 hours', value: '4h' }, { name: 'in 8 hours', value: '8h' }, { name: 'in 1 day', value: '1d' }, { name: 'in 3 days', value: '3d' }, { name: 'in 1 week', value: '7d' })))
   }
 
   public async chatInputRun (interaction: ChatInputCommandInteraction) {

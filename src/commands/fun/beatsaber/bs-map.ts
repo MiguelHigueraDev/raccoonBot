@@ -26,9 +26,8 @@ export class BsMapCommand extends Command {
             .setDescription('The map ID.')
             .setRequired(true)
             .setMaxLength(30)
-        ), {
-      idHints: ['1228463306684239972', '1228498297950572676']
-    })
+        )
+    )
   }
 
   public async chatInputRun (interaction: ChatInputCommandInteraction) {

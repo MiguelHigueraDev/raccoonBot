@@ -18,10 +18,8 @@ export class PreferencesCommand extends Command {
     registry.registerChatInputCommand((builder) =>
       builder
         .setName(this.name)
-        .setDescription(this.description),
-    {
-      idHints: ['1202036953139122287', '1203384450898071583']
-    })
+        .setDescription(this.description)
+    )
   }
 
   public async chatInputRun (interaction: ChatInputCommandInteraction) {

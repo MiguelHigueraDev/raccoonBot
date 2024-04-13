@@ -40,9 +40,7 @@ export class BsSearchCommand extends Command {
             .setDescription('Only include ranked maps. (Default: false)')
             .setRequired(false)
         )
-    , {
-      idHints: ['1228543530423812096']
-    })
+    )
   }
 
   public async chatInputRun (interaction: ChatInputCommandInteraction) {

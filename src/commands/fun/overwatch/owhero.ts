@@ -23,9 +23,8 @@ export class OwHeroCommand extends Command {
             .setName('role')
             .setDescription('(OPTIONAL) Specify the role you want to get.')
             .setRequired(false)
-            .addChoices({ name: 'DPS', value: 'dps' }, { name: 'Support', value: 'support' }, { name: 'Tank', value: 'tank' })), {
-      idHints: ['1203344077643317279', '1203384544544297060']
-    })
+            .addChoices({ name: 'DPS', value: 'dps' }, { name: 'Support', value: 'support' }, { name: 'Tank', value: 'tank' }))
+    )
   }
 
   public async chatInputRun (interaction: ChatInputCommandInteraction) {

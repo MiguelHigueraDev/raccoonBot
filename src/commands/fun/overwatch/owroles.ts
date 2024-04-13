@@ -47,9 +47,8 @@ export class OwRolesCommand extends Command {
           option
             .setName('assignhero')
             .setDescription('(OPTIONAL) Assign a hero to each player')
-            .setRequired(false)), {
-      idHints: ['1203377500546138142', '1203384542820311081']
-    })
+            .setRequired(false))
+    )
   }
 
   public async chatInputRun (interaction: ChatInputCommandInteraction) {

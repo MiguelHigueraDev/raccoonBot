@@ -27,9 +27,7 @@ export class TriviaCommand extends Command {
             .setDescription('(OPTIONAL) Specify a category')
             .addChoices(...TRIVIA_CATEGORIES)
         )
-    , {
-      idHints: ['1200881899577561258', '1203384541159493653']
-    })
+    )
   }
 
   public async chatInputRun (interaction: ChatInputCommandInteraction) {

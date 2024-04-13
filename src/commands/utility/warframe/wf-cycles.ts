@@ -18,9 +18,8 @@ export class WfCyclesCommand extends Command {
     registry.registerChatInputCommand((builder) =>
       builder
         .setName(this.name)
-        .setDescription(this.description), {
-      idHints: ['1228524409699172473', '1228531770195185675']
-    })
+        .setDescription(this.description)
+    )
   }
 
   public async chatInputRun (interaction: ChatInputCommandInteraction) {

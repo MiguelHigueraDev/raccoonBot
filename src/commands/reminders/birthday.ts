@@ -25,9 +25,7 @@ export class BirthdayCommand extends Command {
             .setDescription('Date in yyyy-mm-dd format, example: February 22nd, 1980 would be 1980-02-22 or 1980/02/22')
             .setMaxLength(10)
             .setMinLength(3)
-        ), {
-      idHints: ['1201314473579921577', '1203384457843966002']
-    }
+        )
     )
   }
 

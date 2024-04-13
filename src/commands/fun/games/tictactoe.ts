@@ -28,9 +28,7 @@ export class TicTacToeCommand extends Command {
             .setDescription('The player you want to play with.')
             .setRequired(true)
         )
-    , {
-      idHints: ['1214409088130088960']
-    })
+    )
   }
 
   public async chatInputRun (interaction: ChatInputCommandInteraction) {

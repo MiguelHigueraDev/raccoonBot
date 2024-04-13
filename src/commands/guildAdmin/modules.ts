@@ -19,10 +19,8 @@ export class ModulesCommand extends Command {
     registry.registerChatInputCommand((builder) =>
       builder
         .setName(this.name)
-        .setDescription(this.description),
-    {
-      idHints: ['1201207600155480246', '1203384536520589382']
-    })
+        .setDescription(this.description)
+    )
   }
 
   public async chatInputRun (interaction: ChatInputCommandInteraction) {

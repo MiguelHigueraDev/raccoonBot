@@ -46,10 +46,7 @@ export class CurrencyCommand extends Command {
               .setDescription('The currency to convert to')
               .setRequired(true)
               .addChoices(...CURRENCY_LIST)
-          ),
-      {
-        idHints: ['1220797768126304277', '1220799837432184872']
-      }
+          )
     )
   }
 

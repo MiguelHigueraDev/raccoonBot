@@ -80,9 +80,7 @@ export class DateFormatCommand extends Command {
             .setRequired(false)
             .setMinValue(0)
             .setMaxValue(59))
-    , {
-      idHints: ['1214763690956562502, 1214768166274859119']
-    })
+    )
   }
 
   public async chatInputRun (interaction: ChatInputCommandInteraction): Promise<InteractionResponse<boolean>> {

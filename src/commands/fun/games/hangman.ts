@@ -37,9 +37,7 @@ export class HangmanCommand extends Command {
             .setMaxLength(15)
             .setMinLength(3)
         )
-    , {
-      idHints: ['1206068859354873896']
-    })
+    )
   }
 
   public async chatInputRun (interaction: ChatInputCommandInteraction) {

@@ -26,9 +26,8 @@ export class ShuffleCommand extends Command {
             .setName('list')
             .setDescription('Comma-separated list of items.')
             .setRequired(true)
-        ), {
-      idHints: ['1200846688248672357', '1203384454345654382']
-    })
+        )
+    )
   }
 
   public async chatInputRun (interaction: ChatInputCommandInteraction): Promise<undefined | InteractionResponse<boolean> | Message<boolean>> {

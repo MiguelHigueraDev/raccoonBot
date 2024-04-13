@@ -23,9 +23,8 @@ export class CelCommand extends Command {
             .setRequired(true)
             .setMaxValue(50000)
             .setMinValue(-50000)
-        ), {
-      idHints: ['1200897088494501978', '1203384623338623058']
-    })
+        )
+    )
   }
 
   public async chatInputRun (interaction: ChatInputCommandInteraction): Promise<InteractionResponse<boolean>> {

@@ -27,9 +27,7 @@ export class RandItemCommand extends Command {
             .setDescription('Comma-separated list of items.')
             .setRequired(true)
         )
-    , {
-      idHints: ['1200846684025016342', '1203384456107261963']
-    })
+    )
   }
 
   public async chatInputRun (interaction: ChatInputCommandInteraction): Promise<undefined | InteractionResponse<boolean> | Message<boolean>> {

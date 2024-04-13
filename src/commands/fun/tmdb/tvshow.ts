@@ -26,9 +26,8 @@ export class TvShowCommand extends Command {
             .setName('tvshow')
             .setDescription('The name of the show.')
             .setRequired(true)
-        ), {
-      idHints: ['1205308301751885844', '1205317483909611531']
-    })
+        )
+    )
   }
 
   public async chatInputRun (interaction: ChatInputCommandInteraction) {
