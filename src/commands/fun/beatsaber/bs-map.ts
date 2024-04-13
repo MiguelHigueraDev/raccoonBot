@@ -76,6 +76,11 @@ export class BsSongCommand extends Command {
     return await response.json()
   }
 
+  /**
+   * Returns an EmbedBuilder object for displaying a Beat Saber map.
+   * @param map - The map object containing the map details.
+   * @returns The EmbedBuilder object for the map.
+   */
   private getMapEmbed (map: Map): EmbedBuilder {
     const mapEmbed = new EmbedBuilder()
       .setColor(BEAT_SABER_EMBED_COLOR)
@@ -115,6 +120,11 @@ export class BsSongCommand extends Command {
     return mapEmbed
   }
 
+  /**
+   * Retrieves a preview of a Beat Saber map as a buffer from the specified URL.
+   * @param url - The URL of the map preview.
+   * @returns A Promise that resolves to an AttachmentBuilder containing the map preview as a Buffer.
+   */
   private async getPreview (url: string) {
     const response = await fetch(url)
     if (!response.ok) return null
@@ -122,6 +132,12 @@ export class BsSongCommand extends Command {
     return new AttachmentBuilder(Buffer.from(buffer)).setName('map-preview.mp3')
   }
 
+  /**
+   * Returns an ActionRowBuilder containing two buttons: one for viewing the map on BeatSaver and one for downloading the map.
+   * @param downloadUrl - The URL for downloading the map.
+   * @param mapId - The ID of the map on BeatSaver.
+   * @returns An ActionRowBuilder containing the buttons.
+   */
   private getButtons (downloadUrl: string, mapId: string): ActionRowBuilder<ButtonBuilder> {
     const beatSaverButton = new ButtonBuilder()
       .setStyle(ButtonStyle.Link)
