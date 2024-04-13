@@ -13,7 +13,8 @@ export const BEAT_SABER_EMOJIS = {
   notes: '<:bsnotes:1228480660621230130>',
   bombs: '<:bombs:1228480661900365944>',
   walls: '<:walls:1228480662982623263>',
-  lights: '<:lights:1228480664815272089>'
+  lights: '<:lights:1228480664815272089>',
+  star: '<:bsstar:1228495607174266880>'
 }
 
 export const EMOJI_PERCENTAGES = {
