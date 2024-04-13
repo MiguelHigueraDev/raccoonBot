@@ -65,6 +65,11 @@ export class WfCyclesCommand extends Command {
     }
   }
 
+  /**
+ * Returns an EmbedBuilder object containing information about Warframe cycles.
+ * @param cycles - The cycles object containing information about different cycles.
+ * @returns An EmbedBuilder object with formatted cycle information.
+ */
   private getCyclesEmbed (cycles: Cycles): EmbedBuilder {
     const embed = new EmbedBuilder()
       .setTitle('Warframe Cycles')
