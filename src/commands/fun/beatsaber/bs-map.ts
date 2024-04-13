@@ -51,14 +51,17 @@ export class BsMapCommand extends Command {
       })
     }
 
-    const embed = this.getMapEmbed(map)
-    const buttons = this.getButtons(map.versions[0].downloadURL, map.id)
-    const attachment = await this.getPreview(map.versions[0].previewURL)
-    await interaction.editReply({ embeds: [embed], components: [buttons] })
+    // Retrieve the first version of the map
+    const firstVersion = map.versions[0]
+
+    const mapEmbed = this.getMapEmbed(map)
+    const beatSaverButtons = this.getButtons(firstVersion.downloadURL, map.id)
+    const mp3Preview = await this.getPreview(firstVersion.previewURL)
+    await interaction.editReply({ embeds: [mapEmbed], components: [beatSaverButtons] })
 
     // Only send the preview if it was successfully fetched
-    if (attachment != null) {
-      return await interaction.followUp({ files: [attachment] })
+    if (mp3Preview != null) {
+      return await interaction.followUp({ files: [mp3Preview] })
     }
   }
 
@@ -80,22 +83,25 @@ export class BsMapCommand extends Command {
    * @returns The EmbedBuilder object for the map.
    */
   private getMapEmbed (map: Map): EmbedBuilder {
+    const firstVersion = map.versions[0]
     const mapEmbed = new EmbedBuilder()
       .setColor(BEAT_SABER_EMBED_COLOR)
       .setTitle(map.name)
-      .setThumbnail(map.versions[0].coverURL)
+      .setThumbnail(firstVersion.coverURL)
       .setFooter({ text: `Map ID: ${map.id} | Mapped by ${map.metadata.levelAuthorName}` })
 
     // Add ranked status
-    if (map.ranked) mapEmbed.setDescription('Ranked')
+    if (map.ranked) mapEmbed.setDescription('**Ranked Map**')
 
-    // Add difficulties
-    const difficulties = map.versions[0].diffs
+    // Add difficulties with their respective characteristic
+    const difficulties = firstVersion.diffs
     for (const diff of difficulties) {
       // Only add stars if the map is a ranked map
       const starsString = diff.stars != null ? `${BEAT_SABER_EMOJIS.star} ${diff.stars.toFixed(2)}  ` : ''
+      // Retrieves the current char emoji from the map's current characteristic
+      const charEmoji = BEAT_SABER_MAP_CHARS[diff.characteristic.toLowerCase() as keyof typeof BEAT_SABER_MAP_CHARS]
       mapEmbed.addFields({
-        name: `${BEAT_SABER_MAP_CHARS[diff.characteristic.toLowerCase() as keyof typeof BEAT_SABER_MAP_CHARS]} ${diff.difficulty}`,
+        name: `${charEmoji} ${diff.difficulty}`,
         value: `${starsString}${BEAT_SABER_EMOJIS.notes} ${diff.notes}   ${BEAT_SABER_EMOJIS.njs} ${diff.njs}   ${BEAT_SABER_EMOJIS.nps} ${diff.nps.toFixed(2)}   ${BEAT_SABER_EMOJIS.bombs} ${diff.bombs}   ${BEAT_SABER_EMOJIS.walls} ${diff.obstacles}   ${BEAT_SABER_EMOJIS.lights} ${diff.events}`
       })
     }
@@ -105,7 +111,7 @@ export class BsMapCommand extends Command {
       mapEmbed.addFields({ name: 'Tags', value: map.tags.join(', ') })
     }
 
-    // Add duration, BPM (if present), and rating
+    // Add duration, BPM (if present), and rating expressed as a percentage (if present)
     const minutes = format(map.metadata.duration * 1000, 'mm:ss')
     mapEmbed.addFields({ name: 'Duration', value: minutes, inline: true })
     if (map.metadata.bpm != null) {
@@ -137,15 +143,8 @@ export class BsMapCommand extends Command {
    * @returns An ActionRowBuilder containing the buttons.
    */
   private getButtons (downloadUrl: string, mapId: string): ActionRowBuilder<ButtonBuilder> {
-    const beatSaverButton = new ButtonBuilder()
-      .setStyle(ButtonStyle.Link)
-      .setLabel('View on BeatSaver')
-      .setURL(`https://beatsaver.com/maps/${mapId}`)
-
-    const downloadButton = new ButtonBuilder()
-      .setStyle(ButtonStyle.Link)
-      .setLabel('Download Map')
-      .setURL(downloadUrl)
+    const beatSaverButton = new ButtonBuilder().setStyle(ButtonStyle.Link).setLabel('View on BeatSaver').setURL(`https://beatsaver.com/maps/${mapId}`)
+    const downloadButton = new ButtonBuilder().setStyle(ButtonStyle.Link).setLabel('Download Map').setURL(downloadUrl)
 
     return new ActionRowBuilder<ButtonBuilder>().addComponents([beatSaverButton, downloadButton])
   }
