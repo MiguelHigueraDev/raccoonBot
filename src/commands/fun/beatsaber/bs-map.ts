@@ -86,7 +86,7 @@ export class BsSongCommand extends Command {
       .setColor(BEAT_SABER_EMBED_COLOR)
       .setTitle(map.name)
       .setThumbnail(map.versions[0].coverURL)
-      .setFooter({ text: `Mapped by ${map.metadata.levelAuthorName}` })
+      .setFooter({ text: `Map ID: ${map.id} | Mapped by ${map.metadata.levelAuthorName}` })
 
     // Add ranked status
     if (map.ranked) mapEmbed.setDescription('Ranked')
