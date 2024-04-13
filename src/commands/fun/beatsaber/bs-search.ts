@@ -56,16 +56,14 @@ export class BsSearchCommand extends Command {
       searchResults = await this.searchMaps(query, sort ?? 'rating', onlyRanked)
     } catch (error) {
       console.error('bs-search error:', error)
-      return await interaction.reply({
-        content: 'An error occurred while fetching the maps. Please try again later.',
-        ephemeral: true
+      return await interaction.editReply({
+        content: 'An error occurred while fetching the maps. Please try again later.'
       })
     }
 
     if (searchResults.docs.length === 0) {
-      return await interaction.reply({
-        content: 'No maps found with that query.',
-        ephemeral: true
+      return await interaction.editReply({
+        content: 'No maps found with that query.'
       })
     }
 
