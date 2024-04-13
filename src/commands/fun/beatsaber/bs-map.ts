@@ -5,7 +5,7 @@ import { BEAT_SABER_EMOJIS, BEAT_SABER_MAP_CHARS } from '../../../constants/emoj
 import { format } from 'date-fns'
 export const BEAT_SABER_EMBED_COLOR = '#eb4034'
 
-export class BsSongCommand extends Command {
+export class BsMapCommand extends Command {
   public constructor (context: Command.LoaderContext, options: Command.Options) {
     super(context, {
       ...options,

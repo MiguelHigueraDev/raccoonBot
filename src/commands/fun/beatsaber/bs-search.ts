@@ -48,12 +48,12 @@ export class BsSearchCommand extends Command {
   public async chatInputRun (interaction: ChatInputCommandInteraction) {
     await interaction.deferReply()
     const query = interaction.options.getString('query', true)
-    const sort = interaction.options.getString('sort')
+    const sort = interaction.options.getString('sort') ?? 'rating'
     const onlyRanked = interaction.options.getBoolean('ranked') ?? false
 
     let searchResults = null
     try {
-      searchResults = await this.searchMaps(query, sort ?? 'rating', onlyRanked)
+      searchResults = await this.searchMaps(query, sort, onlyRanked)
     } catch (error) {
       console.error('bs-search error:', error)
       return await interaction.editReply({
@@ -75,6 +75,7 @@ export class BsSearchCommand extends Command {
  * Searches for maps on BeatSaver based on the provided query and sort order.
  * @param query - The search query.
  * @param sort - The sort order for the search results.
+ * @param ranked - Whether to only include ranked maps in the search results.
  * @returns A Promise that resolves to the JSON response containing the search results.
  * @throws An error if the request to BeatSaver fails.
  */
