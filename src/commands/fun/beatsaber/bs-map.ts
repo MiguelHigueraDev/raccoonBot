@@ -1,7 +1,7 @@
 import { Command } from '@sapphire/framework'
 import { ActionRowBuilder, AttachmentBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, type ChatInputCommandInteraction } from 'discord.js'
 import { type Map } from '../../../lib/interface/beatsaver/Map'
-import { BEAT_SABER_EMOJIS } from '../../../constants/emojis/emojis'
+import { BEAT_SABER_EMOJIS, BEAT_SABER_MAP_CHARS } from '../../../constants/emojis/emojis'
 import { format } from 'date-fns'
 export const BEAT_SABER_EMBED_COLOR = '#eb4034'
 
@@ -40,16 +40,14 @@ export class BsSongCommand extends Command {
       map = await this.getMap(mapId)
     } catch (error) {
       console.error('bs-song error:', error)
-      return await interaction.reply({
-        content: 'An error occurred while fetching the map. Please try again later.',
-        ephemeral: true
+      return await interaction.editReply({
+        content: 'An error occurred while fetching the map. Please try again later.'
       })
     }
 
     if (map == null) {
-      return await interaction.reply({
-        content: 'Map not found in BeatSaver. Check the ID is correct.',
-        ephemeral: true
+      return await interaction.editReply({
+        content: 'Map not found in BeatSaver. Check the ID is correct.'
       })
     }
 
@@ -97,7 +95,7 @@ export class BsSongCommand extends Command {
       // Only add stars if the map is a ranked map
       const starsString = diff.stars != null ? `${BEAT_SABER_EMOJIS.star} ${diff.stars.toFixed(2)}  ` : ''
       mapEmbed.addFields({
-        name: diff.difficulty,
+        name: `${diff.difficulty} ${BEAT_SABER_MAP_CHARS[diff.characteristic.toLowerCase() as keyof typeof BEAT_SABER_MAP_CHARS]} (${diff.characteristic})`,
         value: `${starsString}${BEAT_SABER_EMOJIS.notes} ${diff.notes}   ${BEAT_SABER_EMOJIS.njs} ${diff.njs}   ${BEAT_SABER_EMOJIS.nps} ${diff.nps.toFixed(2)}   ${BEAT_SABER_EMOJIS.bombs} ${diff.bombs}   ${BEAT_SABER_EMOJIS.walls} ${diff.obstacles}   ${BEAT_SABER_EMOJIS.lights} ${diff.events}`
       })
     }
