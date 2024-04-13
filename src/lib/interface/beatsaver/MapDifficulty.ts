@@ -1,5 +1,6 @@
 import { type MapCharacteristic } from './MapCharacteristic'
 import { type MapDifficultyString } from './MapDifficultyString'
+import { type MapParitySummary } from './MapParitySummary'
 
 export interface MapDifficulty {
   bombs: number
@@ -19,4 +20,5 @@ export interface MapDifficulty {
   offset: number | undefined
   seconds: number
   stars: number | undefined
+  paritySummary: MapParitySummary
 }
