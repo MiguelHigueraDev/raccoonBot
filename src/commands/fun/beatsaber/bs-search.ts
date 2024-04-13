@@ -71,8 +71,6 @@ export class BsSearchCommand extends Command {
 
     const embed = this.getResultsEmbed(searchResults)
     await interaction.editReply({ embeds: [embed] })
-
-    console.log(searchResults)
   }
 
   /**
