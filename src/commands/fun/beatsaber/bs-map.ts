@@ -39,7 +39,7 @@ export class BsMapCommand extends Command {
     try {
       map = await this.getMap(mapId)
     } catch (error) {
-      console.error('bs-song error:', error)
+      console.error('bs-map error:', error)
       return await interaction.editReply({
         content: 'An error occurred while fetching the map. Please try again later.'
       })
@@ -95,7 +95,7 @@ export class BsMapCommand extends Command {
       // Only add stars if the map is a ranked map
       const starsString = diff.stars != null ? `${BEAT_SABER_EMOJIS.star} ${diff.stars.toFixed(2)}  ` : ''
       mapEmbed.addFields({
-        name: `${diff.difficulty} ${BEAT_SABER_MAP_CHARS[diff.characteristic.toLowerCase() as keyof typeof BEAT_SABER_MAP_CHARS]} (${diff.characteristic})`,
+        name: `${BEAT_SABER_MAP_CHARS[diff.characteristic.toLowerCase() as keyof typeof BEAT_SABER_MAP_CHARS]} ${diff.difficulty}`,
         value: `${starsString}${BEAT_SABER_EMOJIS.notes} ${diff.notes}   ${BEAT_SABER_EMOJIS.njs} ${diff.njs}   ${BEAT_SABER_EMOJIS.nps} ${diff.nps.toFixed(2)}   ${BEAT_SABER_EMOJIS.bombs} ${diff.bombs}   ${BEAT_SABER_EMOJIS.walls} ${diff.obstacles}   ${BEAT_SABER_EMOJIS.lights} ${diff.events}`
       })
     }
@@ -112,7 +112,7 @@ export class BsMapCommand extends Command {
       mapEmbed.addFields({ name: 'BPM', value: map.metadata.bpm.toString(), inline: true })
     }
     if (map.stats.score != null) {
-      mapEmbed.addFields({ name: 'Rating', value: `${map.stats.score.toFixed(2)} (${map.stats.upvotes} / ${map.stats.downvotes})`, inline: true })
+      mapEmbed.addFields({ name: 'Rating', value: `${(map.stats.score * 100).toFixed(2)}% (${map.stats.upvotes} / ${map.stats.downvotes})`, inline: true })
     }
 
     return mapEmbed
