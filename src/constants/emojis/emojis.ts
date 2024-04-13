@@ -17,6 +17,17 @@ export const BEAT_SABER_EMOJIS = {
   star: '<:bsstar:1228495607174266880>'
 }
 
+export const BEAT_SABER_MAP_CHARS = {
+  standard: '<:standard:1228550161157066813>',
+  onesaber: '<:onesaber:1228550159843987547>',
+  noarrows: '<:noarrows:1228550158321713203>',
+  lightshow: '<:lightshow:1228550157046382643>',
+  '90degree': '<:90degree:1228550150545477713>',
+  '360degree': '<:360degree:1228550152533573723>',
+  lawless: '<:lawless:1228550153934471198>',
+  legacy: '<:legacy:1228550155645485116>'
+}
+
 export const EMOJI_PERCENTAGES = {
   100: `${EMOJIS.fullBar}${EMOJIS.fullBar}${EMOJIS.fullBar}${EMOJIS.fullBar}${EMOJIS.fullBar}${EMOJIS.fullBar}${EMOJIS.fullBar}${EMOJIS.fullBar}${EMOJIS.fullBar}${EMOJIS.fullBar}`,
   95: `${EMOJIS.fullBar}${EMOJIS.fullBar}${EMOJIS.fullBar}${EMOJIS.fullBar}${EMOJIS.fullBar}${EMOJIS.fullBar}${EMOJIS.fullBar}${EMOJIS.fullBar}${EMOJIS.fullBar}${EMOJIS.halfBar}`,
