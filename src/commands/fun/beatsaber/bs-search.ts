@@ -10,7 +10,7 @@ export class BsSearchCommand extends Command {
     super(context, {
       ...options,
       name: 'bs-search',
-      description: 'Search for a Beat Saber map on BeatSaver',
+      description: 'Search for Beat Saber maps on BeatSaver.',
       cooldownDelay: 7000
     })
   }
