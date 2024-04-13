@@ -27,7 +27,7 @@ export class BsSongCommand extends Command {
             .setRequired(true)
             .setMaxLength(30)
         ), {
-      idHints: ['1228463306684239972']
+      idHints: ['1228463306684239972', '1228498297950572676']
     })
   }
 
