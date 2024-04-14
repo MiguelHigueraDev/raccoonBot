@@ -67,7 +67,7 @@ export class BsMapCommand extends Command {
   /**
    * Retrieves a Beat Saber map from the BeatSaver API based on the provided map ID.
    * @param mapId The ID of the map to retrieve.
-   * @returns A Promise that resolves to the retrieved map, or undefined if the request fails.
+   * @returns A Promise that resolves to the retrieved map, or null if the request fails.
    */
   private async getMap (mapId: string): Promise<Map | null> {
     const apiUrl = `https://api.beatsaver.com/maps/id/${mapId}`
