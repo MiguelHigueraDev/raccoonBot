@@ -28,6 +28,15 @@ export const BEAT_SABER_MAP_CHARS = {
   legacy: '<:legacy:1228550155645485116>'
 }
 
+export const WF_RELICS = {
+  lith: '<:lith:1229617180996276295>',
+  meso: '<:meso:1229617187036336228>',
+  neo: '<:neo:1229617190874120192>',
+  axi: '<:axi:1229617193835171890>',
+  requiem: '<:requiem:1229617195655495753>',
+  omnia: '<a:omnia:1229617177674649650>'
+}
+
 export const EMOJI_PERCENTAGES = {
   100: `${EMOJIS.fullBar}${EMOJIS.fullBar}${EMOJIS.fullBar}${EMOJIS.fullBar}${EMOJIS.fullBar}${EMOJIS.fullBar}${EMOJIS.fullBar}${EMOJIS.fullBar}${EMOJIS.fullBar}${EMOJIS.fullBar}`,
   95: `${EMOJIS.fullBar}${EMOJIS.fullBar}${EMOJIS.fullBar}${EMOJIS.fullBar}${EMOJIS.fullBar}${EMOJIS.fullBar}${EMOJIS.fullBar}${EMOJIS.fullBar}${EMOJIS.fullBar}${EMOJIS.halfBar}`,
