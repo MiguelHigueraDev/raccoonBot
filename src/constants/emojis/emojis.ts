@@ -29,12 +29,12 @@ export const BEAT_SABER_MAP_CHARS = {
 }
 
 export const WF_RELICS = {
-  lith: '<:lith:1229617180996276295>',
-  meso: '<:meso:1229617187036336228>',
-  neo: '<:neo:1229617190874120192>',
-  axi: '<:axi:1229617193835171890>',
-  requiem: '<:requiem:1229617195655495753>',
-  omnia: '<a:omnia:1229617177674649650>'
+  Lith: '<:lith:1229617180996276295>',
+  Meso: '<:meso:1229617187036336228>',
+  Neo: '<:neo:1229617190874120192>',
+  Axi: '<:axi:1229617193835171890>',
+  Requiem: '<:requiem:1229617195655495753>',
+  Omnia: '<a:omnia:1229617177674649650>'
 }
 
 export const EMOJI_PERCENTAGES = {
