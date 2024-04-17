@@ -46,7 +46,7 @@ export class BsSearchCommand extends Command {
   public async chatInputRun (interaction: ChatInputCommandInteraction) {
     await interaction.deferReply()
     const query = interaction.options.getString('query', true)
-    const sort = interaction.options.getString('sort') ?? 'rating'
+    const sort = interaction.options.getString('sort') ?? SORTING_TYPES[0].value
     const onlyRanked = interaction.options.getBoolean('ranked') ?? false
 
     let searchResults = null
@@ -95,10 +95,10 @@ export class BsSearchCommand extends Command {
  * @returns An EmbedBuilder object with formatted search results.
  */
   private getResultsEmbed (results: SearchResults): EmbedBuilder {
-    // Only take first 10 results.
+    const maxResults = 10
     let finalResults = results.docs
-    if (finalResults.length > 10) {
-      finalResults = finalResults.slice(0, 9)
+    if (finalResults.length >= maxResults) {
+      finalResults = finalResults.slice(0, maxResults - 1)
     }
 
     const embed = new EmbedBuilder()
