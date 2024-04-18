@@ -3,6 +3,8 @@ import { EmbedBuilder, type ChatInputCommandInteraction } from 'discord.js'
 import { type Fissure } from '../../../lib/interface/warframe/Fissure'
 import { WF_RELICS } from '../../../constants/emojis/emojis'
 
+type FissureType = 'normal' | 'steel-path' | 'storm'
+
 export class WfFissuresCommand extends Command {
   public constructor (context: Command.LoaderContext, options: Command.Options) {
     super(context, {
@@ -43,7 +45,7 @@ export class WfFissuresCommand extends Command {
       return await interaction.reply('There are no active fissures at the moment.')
     }
 
-    const embed = await this.getFissuresEmbed(fissures, fissureType as 'normal' | 'steel-path' | 'storm')
+    const embed = await this.getFissuresEmbed(fissures, fissureType as FissureType)
     await interaction.reply({ embeds: [embed] })
   }
 
@@ -51,14 +53,14 @@ export class WfFissuresCommand extends Command {
     try {
       const fissures = await fetch('https://api.warframestat.us/pc/fissures')
       const fissuresData = await fissures.json()
-      const filtered = fissuresData.filter((fissure: Fissure) => !fissure.expired)
-      return filtered
+      // Only return non expired fissures
+      return fissuresData.filter((fissure: Fissure) => !fissure.expired)
     } catch {
       return null
     }
   }
 
-  private async getFissuresEmbed (fissures: Fissure[], fissureType: 'normal' | 'steel-path' | 'storm') {
+  private async getFissuresEmbed (fissures: Fissure[], fissureType: FissureType) {
     const embed = new EmbedBuilder()
       .setColor('Blurple')
 
