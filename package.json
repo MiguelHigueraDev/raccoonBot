@@ -21,7 +21,7 @@
     "@types/node-cron": "^3.0.11",
     "@types/node-schedule": "^2.1.5",
     "date-fns": "^3.3.1",
-    "discord.js": "^14.14.1",
+    "discord.js": "^14.15.3",
     "dotenv": "^16.3.1",
     "he": "^1.2.0",
     "libsodium": "^0.7.13",
