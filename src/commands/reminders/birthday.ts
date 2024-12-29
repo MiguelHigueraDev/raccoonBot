@@ -22,7 +22,7 @@ export class BirthdayCommand extends Command {
         .addStringOption((option) =>
           option
             .setName('birthdate')
-            .setDescription('Date in yyyy-mm-dd format, example: February 22nd, 1980 would be 1980-02-22 or 1980/02/22')
+            .setDescription('Date in yyyy-mm-dd or mm-dd format, example: 1980-02-22 or 02-22.')
             .setMaxLength(10)
             .setMinLength(3)
         )
@@ -57,10 +57,10 @@ export class BirthdayCommand extends Command {
 
       // Check if entered date has a valid format
       if (!DateFormatter.checkDateFormat(birthdate)) {
-        return await Alerts.ERROR(interaction, 'Date has an invalid format. It must be in yyyy/mm/dd, yyyy.mm.dd, or yyyy-mm-dd format.\nExample: March 20, 2020 would be 2020/03/20.', true)
+        return await Alerts.ERROR(interaction, 'Date has an invalid format. It must be in yyyy-mm-dd or mm-dd format.\nExample: March 20th would be 03-20, or March 20, 2020 would be 2020-03-20.', true)
       }
       const parsedDate = DateFormatter.parseDate(birthdate)
-      if (parsedDate === false) return await Alerts.ERROR(interaction, 'Date has an invalid format or is invalid. It must be in yyyy/mm/dd, yyyy.mm.dd, or yyyy-mm-dd format.\nExample: March 20, 2020 would be 2020/03/20.', true)
+      if (parsedDate === false) return await Alerts.ERROR(interaction, 'Date has an invalid format or is invalid. It must be in yyyy-mm-dd or mm-dd format.\nExample: March 20th would be 03-20, or March 20, 2020 would be 2020-03-20.', true)
       // Add 8 hours to account for most timezones, so it shows the correct day.
       const correctedDate = addHours(new Date(parsedDate), 8).toISOString()
 
