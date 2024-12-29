@@ -62,6 +62,7 @@ const sendBirthdayMessage = async (guildId: string, userId: string) => {
       if (channel != null && channel.isTextBased()) {
         if (await checkChannelPermissions(guildId, container.client.user.id, channel.id)) {
           await sendBirthdayEmbed(channel, userId)
+          return true
         }
       }
     }
@@ -70,11 +71,9 @@ const sendBirthdayMessage = async (guildId: string, userId: string) => {
     const channels = (await (container.client.guilds.fetch(guildId))).channels.cache.filter((ch) => ch.isTextBased() && !ch.isVoiceBased() && !ch.isThread() && !ch.isThreadOnly())
     for (const ch of channels) {
       const channel = ch[1]
-      if (channel == null) continue
-      if (channel.isTextBased()) {
-        if (await checkChannelPermissions(guildId, container.client.user.id, channel.id)) {
-          await sendBirthdayEmbed(channel, userId)
-        }
+      if (channel?.isTextBased() && await checkChannelPermissions(guildId, container.client.user.id, channel.id)) {
+        await sendBirthdayEmbed(channel, userId)
+        return true
       }
     }
     return false
