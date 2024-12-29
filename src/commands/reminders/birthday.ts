@@ -48,7 +48,7 @@ export class BirthdayCommand extends Command {
         // Only display birthday
         const user = await this.container.db.user.findUnique({ where: { id: userId }, select: { birthday: true } })
         if (user.birthday == null) {
-          return await Alerts.INFO(interaction, 'Your birthday isn\'t saved. Save it using this command and providing a date in yyyy-mm-dd format.', true)
+          return await Alerts.INFO(interaction, 'Your birthday isn\'t saved. Save it using this command and providing a date in yyyy-mm-dd or mm-dd format.', true)
         } else {
           const storedDate = Math.floor(addHours(user.birthday.getTime(), 8) / 1000)
           return await Alerts.INFO(interaction, `Your birthday is: ${time(storedDate, 'D')}`, true)
