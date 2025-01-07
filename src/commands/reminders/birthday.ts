@@ -31,8 +31,7 @@ export class BirthdayCommand extends Command {
 
   public async chatInputRun (interaction: ChatInputCommandInteraction) {
     const birthdate = interaction.options.getString('birthdate')
-    const userId = interaction.user.id
-    const username = interaction.user.username
+    const { id: userId, username } = interaction.user
     const user = await this.container.db.user.findUnique({ where: { id: userId } })
     try {
     // If user is not stored, store it
